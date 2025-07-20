@@ -1,0 +1,10 @@
+{
+    "PointStatus": "Identified",
+    "Status": {
+        "Code": "Ok"
+    },
+    "Points": [
+        "33000001|||Bahnhof Mitte|5659249|4620933|0||"
+    ],
+    "ExpirationTime": "/Date(1753058167057+0200)/"
+}

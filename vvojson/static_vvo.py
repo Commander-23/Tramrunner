@@ -1,12 +1,12 @@
 import csv
-import json
-import requests
-from typing import Dict
-import os
-import pprint
-import requests, json
 
-def web_get_json(url: str) -> Dict:
+
+from typing import Dict
+
+import pprint
+
+
+def web_get_json(url: str, nolines: bool) -> Dict:
     """
     Fetches data from the given URL and returns it as a JSON object.
     Args:
@@ -14,7 +14,12 @@ def web_get_json(url: str) -> Dict:
     Returns:
         dict: Parsed JSON data.
     """
+    import requests
     
+    if url is None:
+        print("using default url")
+        url = "https://www.vvo-online.de/open_data/vvo_stops.json"
+
     try:
         with requests.Session() as session:
             response = session.get(
@@ -29,14 +34,19 @@ def web_get_json(url: str) -> Dict:
 
     stations = response.json()
 
-
+    
     geostations = []
     for station in stations:# Parse the JSON response
-        lines = station['Lines']
+        if not nolines:
+            for i in range(0, len(station['Lines']), 1):
+                lines = station['Lines'][i]
+        else:
+            lines= []
         feature = {
             "type": "Feature",
             "properties": {
                 "number": station['gid'],
+                "id": station['id'],
                 "nameWithCity": station['place']+' ' + station['name'],
                 "name": station['name'],
                 "city": station['place'],
@@ -48,7 +58,8 @@ def web_get_json(url: str) -> Dict:
                     float(station['y'].replace(',', '.')) if station['y'] else 0.0
                 ] if station.get('x') and station.get('y') else [0.0, 0.0]
             },
-            "Lines": [station['Lines'][i] for i in range(0, len(station['Lines']), 1)]
+            
+            "Lines": lines
                 
             }   
                
@@ -70,7 +81,7 @@ def csv_to_geojson(csv_path: str) -> Dict:
     """
 
     # local_shortnames_csv_path = '/home/cmdr/dev-py/files/shortnames_dresden.csv'
-    
+
     
 
     # local_source.csv
@@ -123,6 +134,7 @@ def write_to_json(json_data: Dict, output_path: str):
     Example:
         write_to_json(feature_collection, '/path/to/output.json)
     """
+    import json
     with open(output_path, mode='w', encoding='utf-8') as geojson_file:
         json.dump(json_data, geojson_file, ensure_ascii=False, indent=4)
 
@@ -136,6 +148,13 @@ def load_geojson(input_path: str) -> Dict:
     Returns:
         dict: Loaded GeoJSON FeatureCollection.
     """
+    import os, json
+    default_path = os.path.join(os.path.dirname(__file__), '/home/cmdr/dev-py/files/local_static.json')
+    if input_path is None and os.path.isfile(default_path):
+        input_path = default_path
+    else:
+        raise FileNotFoundError(f"GeoJSON file not found: {input_path}")
+    
     with open(input_path, 'r') as geojson_file:
         return json.load(geojson_file)
 
@@ -152,6 +171,7 @@ def search_geojson(geojson: Dict, key: str, value: str):
     return [
         feature for feature in geojson.get("features", [])
         if feature.get("properties", {}).get(key) == value
+        
     ][:5]
 
 def get_stop_from_shortname(rawSearchInput, csv_path=None):
@@ -165,7 +185,35 @@ def get_stop_from_shortname(rawSearchInput, csv_path=None):
                 return line[0]
     return None
 
+def search_by_line_number(geojson: Dict, line_number: str) -> list:
+    """
+    Searches for features in a GeoJSON FeatureCollection that have a specific line number.
+    Args:
+        geojson (dict): GeoJSON FeatureCollection.
+        line_number (str): The line number to search for.
+    Returns:
+        list: Features that have the specified line number.
+    """
+    matching_features = []
+    for feature in geojson.get("features", []):
+        lines = feature.get("Lines", [])
+        if any(line.get("LineNr") == line_number for line in lines):
+            matching_features.append(feature)
+    return matching_features  # Return up to 5 matches
 
+
+def namelist():
+    """
+    returns a list of all availabile names in the GeoJson
+    shortnames, city, names, fullname
+    """
+
+
+#
+# data.namelist()
+#
+#
+#
 
     
 
@@ -230,7 +278,7 @@ if __name__ == "__main__":
 
     
 
-    data = web_get_json(web_daily_url)
+    data = web_get_json(web_daily_url, nolines=True)
     if data is None:
         
         data = load_geojson(local_static_json_path)
@@ -241,27 +289,38 @@ if __name__ == "__main__":
 
 
     
-
     write_to_json(data, web_daily_json_path)
     print(f"local copy saved to {web_daily_json_path}")
     print(f"Number of features: {len(data['features'])}")
 
+    if 1==1:
+        print("\n"*3)
+        search_key = 'name'
+        search_value = 'Bahnhof Mitte'
+        results = search_geojson(data, search_key, search_value)
+        
+        print("\nGeoJSON FeatureCollection (pretty print):")
+        pprint.pprint(results, indent=2, width=120)
+        
+        # Access first 3 Lines entries for each result
+        print("\nFirst 3 Lines for each result:")
+        for feature in results:
+            stop_name = feature['properties']['name']
+            lines = feature['Lines'][:10]  # Get first 3 lines
+            print(f"\nStop: {stop_name}")
+            for line in lines:
+                print(f"Line {line['LineNr']}: {line['Route']}")
 
-    print("\n"*3)
-    search_key = 'city'
-    search_value = 'Dresden'
-    results = search_geojson(data, search_key, search_value)
-    
-    print("\nGeoJSON FeatureCollection (pretty print):")
-    pprint.pprint(results, indent=2, width=120)
-    
-    # Access first 3 Lines entries for each result
-    print("\nFirst 3 Lines for each result:")
-    for feature in results:
-        stop_name = feature['properties']['name']
-        lines = feature['Lines'][:10]  # Get first 3 lines
-        print(f"\nStop: {stop_name}")
-        for line in lines:
-            print(f"Line {line['LineNr']}: {line['Route']}")
-
+    if 1!=1:
+        # Example usage
+        line_11_stops = search_by_line_number(data, "11")
+        for stop in line_11_stops:
+            name = stop['properties']['name']
+            place = stop['properties']['city']
+            print(f"Stop: {place} {name}")
+            # Print the matching line info
+            for line in stop['Lines']:
+                if line['LineNr'] == "11":
+                    print(f"Line {line['LineNr']}: {line['Route']}")
+            print()
 
