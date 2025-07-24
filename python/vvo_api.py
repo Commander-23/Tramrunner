@@ -59,7 +59,7 @@ def vvo_api_pointfinder(query: str, limit: int = 0, stopsOnly: bool = False, reg
 
 
 
-def vvo_api_departure_monitora(stopid: str, limit: int = 0, time: str = '' , isarrival: bool = False, shorttermchanges: bool = False, mot: list = None) -> None:
+def vvo_api_departure_monitor(stopid: str, limit: int = 0, time: str = '' , isarrival: bool = False, shorttermchanges: bool = False, mot: list = None) -> None:
     """
     List out upcoming departures from a stop id.
     Arguments:   
@@ -179,7 +179,7 @@ def vvo_api_lines(stopid: str) -> None:
         return None
 
 
-if 1 == 1:
+if 1 != 1:
     print(vvo_api_pointfinder("Räcknitzhöhe", limit=10, stopsOnly=True))
 
     userinput = input("Enter a stop name or ID: ")
