@@ -1,6 +1,5 @@
 import requests
 import json
-from static_vvo import write_to_json, web_get_json, load_geojson, search_geojson
 
 headers = {
     "Content-Type": "application/json",
@@ -22,8 +21,8 @@ def vvo_api_pointfinder(query: str, limit: int = 0, stopsOnly: bool = False, reg
         {'PointStatus': 'Identified', 'Status': {'Code': 'Ok'}, 'Points': ['33000313|||Räcknitzhöhe|5655709|4622355|0||'], 'ExpirationTime': '/Date(1753115786301+0200)/'}
     """
    
-
     defaulturl = "https://webapi.vvo-online.de/tr/pointfinder"
+
     if not query:
         raise ValueError("Query parameter cannot be empty.")
     
@@ -89,6 +88,27 @@ def vvo_api_departure_monitor(stopid: str, limit: int = 0, time: str = '' , isar
 
 
 
+    try:
+        response = requests.get(defaulturl, params=params, headers=headers, timeout=5, verify=True) 
+        if response.status_code == 200:
+            content = json.loads(response.content.decode('utf-8'))
+            
+            output = content #content['Points'][0].split('|')
+            # outputs the first point in the list, e.g. ['33000313', '', 'Räcknitzhöhe', '5655709', '4622355', '0', '']
+            
+            return output
+        else:
+            raise requests.HTTPError('HTTP Status: {}'.format(response.status_code))    
+    except requests.RequestException as e:
+        print(f"Failed to access VVO pointfinder. Request Exception", e)
+        response = None
+    
+    if response is None:
+        return None
+
+
+
+
 def vvo_api_trip_details(tripid: str, time: str, stopid: str, mapdata: bool = False) -> None:
     """
     Get Details about the stations involved in a trip.
@@ -124,6 +144,7 @@ def vvo_api_query_trip(origin: str, destination: str, shorttermchanges: bool = F
     """
     defaulturl = "https://webapi.vvo-online.de/tr/trips"
     headers["X-Requested-With"] = "de.dvb.dvbmobil"
+    
     if not origin or not destination:
         raise ValueError("Origin or destination cannot be empty.")
 
@@ -176,27 +197,4 @@ def vvo_api_lines(stopid: str) -> None:
         response = None
     
     if response is None:
-        return None
-
-
-if 1 != 1:
-    print(vvo_api_pointfinder("Räcknitzhöhe", limit=10, stopsOnly=True))
-
-    userinput = input("Enter a stop name or ID: ")
-    stop_id = vvo_api_pointfinder(userinput, limit=10, stopsOnly=True)[0]
-    print(stop_id)
-    lines = vvo_api_lines(stop_id)
-    print(lines)
-
-if 1 != 1:
-    #
-    
-    data = web_get_json(url=None,nolines=True)
-    #print(data)
-    search_key = 'name'
-    search_value = 'Bahnhof Mitte'
-    results = search_geojson(data, search_key, search_value)
-    #print(results)
-    print(results[0]['properties']['id'])
-
-    
+        return None   

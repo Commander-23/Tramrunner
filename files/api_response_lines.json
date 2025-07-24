@@ -1,0 +1,145 @@
+{
+    "Lines": [
+        {
+            "Name": "11",
+            "Mot": "Tram",
+            "Changes": [
+                "23520"
+            ],
+            "Directions": [
+                {
+                    "Name": "Dresden Zschertnitz Münzmeisterstraße",
+                    "TimeTables": [
+                        {
+                            "Id": "voe:11011: :H:j25:3",
+                            "Name": "Standardfahrplan DVB - gültig ab 6. Januar 2025"
+                        },
+                        {
+                            "Id": "voe:11011: :H:j25:41",
+                            "Name": "Grundfahrplan Sommerferien - gültig vom 30. Juni bis 10. August 2025"
+                        },
+                        {
+                            "Id": "voe:11011: :H:j25:47",
+                            "Name": "Fahrplan-Grunddaten 2. Ferienhälfte (gültig vom 21.07. bis 10.08.2025)"
+                        },
+                        {
+                            "Id": "voe:11011: :H:j25:49",
+                            "Name": "Fahrplandatenaktualisierung - gültig vom 25. bis 31. Juli 2025"
+                        }
+                    ]
+                },
+                {
+                    "Name": "Dresden Eisenbahnstraße",
+                    "TimeTables": [
+                        {
+                            "Id": "voe:11011: :R:j25:3",
+                            "Name": "Standardfahrplan DVB - gültig ab 6. Januar 2025"
+                        }
+                    ]
+                },
+                {
+                    "Name": "Dresden Bühlau Ullersdorfer Platz",
+                    "TimeTables": [
+                        {
+                            "Id": "voe:11011: :R:j25:41",
+                            "Name": "Grundfahrplan Sommerferien - gültig vom 30. Juni bis 10. August 2025"
+                        },
+                        {
+                            "Id": "voe:11011: :R:j25:46",
+                            "Name": "Fahrplandatenaktualisierung - gültig vom 18. bis 24. Juli 2025"
+                        },
+                        {
+                            "Id": "voe:11011: :R:j25:47",
+                            "Name": "Fahrplan-Grunddaten 2. Ferienhälfte (gültig vom 21.07. bis 10.08.2025)"
+                        },
+                        {
+                            "Id": "voe:11011: :R:j25:49",
+                            "Name": "Fahrplandatenaktualisierung - gültig vom 25. bis 31. Juli 2025"
+                        }
+                    ]
+                },
+                {
+                    "Name": "Dresden Postplatz",
+                    "TimeTables": [
+                        {
+                            "Id": "voe:11011: :H:j25:46",
+                            "Name": "Fahrplandatenaktualisierung - gültig vom 18. bis 24. Juli 2025"
+                        }
+                    ]
+                }
+            ],
+            "Diva": {
+                "Number": "11011",
+                "Network": "voe"
+            }
+        },
+        {
+            "Name": "85",
+            "Mot": "CityBus",
+            "Changes": [
+                "23520",
+                "23448"
+            ],
+            "Directions": [
+                {
+                    "Name": "DD Löbtau Süd Mohorner Str.",
+                    "TimeTables": [
+                        {
+                            "Id": "voe:21085: :H:j25:3",
+                            "Name": "Standardfahrplan DVB - gültig ab 6. Januar 2025"
+                        },
+                        {
+                            "Id": "voe:21085: :H:j25:58",
+                            "Name": "Grundfahrplan Sommerferien - gültig vom 30. Juni bis 10. August 2025"
+                        },
+                        {
+                            "Id": "voe:21085: :H:j25:63",
+                            "Name": "Fahrplandatenaktualisierung - gültig vom 18. bis 24. Juli 2025"
+                        },
+                        {
+                            "Id": "voe:21085: :H:j25:64",
+                            "Name": "Fahrplan-Grunddaten 2. Ferienhälfte (gültig vom 21.07. bis 10.08.2025)"
+                        },
+                        {
+                            "Id": "voe:21085: :H:j25:66",
+                            "Name": "Fahrplandatenaktualisierung - gültig vom 25. bis 31. Juli 2025"
+                        }
+                    ]
+                },
+                {
+                    "Name": "Dresden Striesen Niederwaldpl.",
+                    "TimeTables": [
+                        {
+                            "Id": "voe:21085: :R:j25:3",
+                            "Name": "Standardfahrplan DVB - gültig ab 6. Januar 2025"
+                        },
+                        {
+                            "Id": "voe:21085: :R:j25:58",
+                            "Name": "Grundfahrplan Sommerferien - gültig vom 30. Juni bis 10. August 2025"
+                        },
+                        {
+                            "Id": "voe:21085: :R:j25:63",
+                            "Name": "Fahrplandatenaktualisierung - gültig vom 18. bis 24. Juli 2025"
+                        },
+                        {
+                            "Id": "voe:21085: :R:j25:64",
+                            "Name": "Fahrplan-Grunddaten 2. Ferienhälfte (gültig vom 21.07. bis 10.08.2025)"
+                        },
+                        {
+                            "Id": "voe:21085: :R:j25:66",
+                            "Name": "Fahrplandatenaktualisierung - gültig vom 25. bis 31. Juli 2025"
+                        }
+                    ]
+                }
+            ],
+            "Diva": {
+                "Number": "21085",
+                "Network": "voe"
+            }
+        }
+    ],
+    "Status": {
+        "Code": "Ok"
+    },
+    "ExpirationTime": "/Date(1753335625598+0200)/"
+}
