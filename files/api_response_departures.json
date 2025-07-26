@@ -4,7 +4,7 @@
         "Code": "Ok"
     },
     "Place": "Dresden",
-    "ExpirationTime": "/Date(1753323533357+0200)/",
+    "ExpirationTime": "/Date(1753487102580+0200)/",
     "Departures": [
         {
             "Id": "voe:11011: :R:j25",
@@ -16,54 +16,8 @@
                 "Type": "Platform"
             },
             "Mot": "Tram",
-            "RealTime": "/Date(1753323900000-0000)/",
-            "ScheduledTime": "/Date(1753323900000-0000)/",
-            "State": "InTime",
-            "RouteChanges": [
-                "23520"
-            ],
-            "Diva": {
-                "Number": "11011",
-                "Network": "voe"
-            },
-            "CancelReasons": [],
-            "Occupancy": "Unknown"
-        },
-        {
-            "Id": "voe:11011: :H:j25",
-            "DlId": "de:vvo:11-11",
-            "LineName": "11",
-            "Direction": "Zschertnitz",
-            "Platform": {
-                "Name": "2",
-                "Type": "Platform"
-            },
-            "Mot": "Tram",
-            "RealTime": "/Date(1753324200000-0000)/",
-            "ScheduledTime": "/Date(1753324200000-0000)/",
-            "State": "InTime",
-            "RouteChanges": [
-                "23520"
-            ],
-            "Diva": {
-                "Number": "11011",
-                "Network": "voe"
-            },
-            "CancelReasons": [],
-            "Occupancy": "Unknown"
-        },
-        {
-            "Id": "voe:11011: :R:j25",
-            "DlId": "de:vvo:11-11",
-            "LineName": "11",
-            "Direction": "Bühlau",
-            "Platform": {
-                "Name": "1",
-                "Type": "Platform"
-            },
-            "Mot": "Tram",
-            "RealTime": "/Date(1753325640000-0000)/",
-            "ScheduledTime": "/Date(1753325640000-0000)/",
+            "RealTime": "/Date(1753487700000-0000)/",
+            "ScheduledTime": "/Date(1753487700000-0000)/",
             "State": "InTime",
             "RouteChanges": [
                 "23520"
@@ -85,38 +39,14 @@
                 "Type": "Platform"
             },
             "Mot": "Tram",
-            "RealTime": "/Date(1753326000000-0000)/",
-            "ScheduledTime": "/Date(1753326000000-0000)/",
+            "RealTime": "/Date(1753488000000-0000)/",
+            "ScheduledTime": "/Date(1753488000000-0000)/",
             "State": "InTime",
             "RouteChanges": [
                 "23520"
             ],
             "Diva": {
                 "Number": "11011",
-                "Network": "voe"
-            },
-            "CancelReasons": [],
-            "Occupancy": "Unknown"
-        },
-        {
-            "Id": "voe:21085: :R:j25",
-            "DlId": "de:vvo:21-85",
-            "LineName": "85",
-            "Direction": "Striesen",
-            "Platform": {
-                "Name": "1",
-                "Type": "Platform"
-            },
-            "Mot": "CityBus",
-            "RealTime": "/Date(1753326720000-0000)/",
-            "ScheduledTime": "/Date(1753326720000-0000)/",
-            "State": "InTime",
-            "RouteChanges": [
-                "23520",
-                "23448"
-            ],
-            "Diva": {
-                "Number": "21085",
                 "Network": "voe"
             },
             "CancelReasons": [],
@@ -132,8 +62,8 @@
                 "Type": "Platform"
             },
             "Mot": "Tram",
-            "RealTime": "/Date(1753327080000-0000)/",
-            "ScheduledTime": "/Date(1753327080000-0000)/",
+            "RealTime": "/Date(1753489500000-0000)/",
+            "ScheduledTime": "/Date(1753489500000-0000)/",
             "State": "InTime",
             "RouteChanges": [
                 "23520"
@@ -155,7 +85,76 @@
                 "Type": "Platform"
             },
             "Mot": "Tram",
-            "ScheduledTime": "/Date(1753327200000-0000)/",
+            "RealTime": "/Date(1753489800000-0000)/",
+            "ScheduledTime": "/Date(1753489800000-0000)/",
+            "State": "InTime",
+            "RouteChanges": [
+                "23520"
+            ],
+            "Diva": {
+                "Number": "11011",
+                "Network": "voe"
+            },
+            "CancelReasons": [],
+            "Occupancy": "ManySeats"
+        },
+        {
+            "Id": "voe:11011: :R:j25",
+            "DlId": "de:vvo:11-11",
+            "LineName": "11",
+            "Direction": "Bühlau",
+            "Platform": {
+                "Name": "1",
+                "Type": "Platform"
+            },
+            "Mot": "Tram",
+            "RealTime": "/Date(1753491300000-0000)/",
+            "ScheduledTime": "/Date(1753491300000-0000)/",
+            "State": "InTime",
+            "RouteChanges": [
+                "23520"
+            ],
+            "Diva": {
+                "Number": "11011",
+                "Network": "voe"
+            },
+            "CancelReasons": [],
+            "Occupancy": "ManySeats"
+        },
+        {
+            "Id": "voe:11011: :H:j25",
+            "DlId": "de:vvo:11-11",
+            "LineName": "11",
+            "Direction": "Zschertnitz",
+            "Platform": {
+                "Name": "2",
+                "Type": "Platform"
+            },
+            "Mot": "Tram",
+            "RealTime": "/Date(1753491600000-0000)/",
+            "ScheduledTime": "/Date(1753491600000-0000)/",
+            "State": "InTime",
+            "RouteChanges": [
+                "23520"
+            ],
+            "Diva": {
+                "Number": "11011",
+                "Network": "voe"
+            },
+            "CancelReasons": [],
+            "Occupancy": "ManySeats"
+        },
+        {
+            "Id": "voe:11011: :R:j25",
+            "DlId": "de:vvo:11-11",
+            "LineName": "11",
+            "Direction": "Bühlau",
+            "Platform": {
+                "Name": "1",
+                "Type": "Platform"
+            },
+            "Mot": "Tram",
+            "ScheduledTime": "/Date(1753493100000-0000)/",
             "RouteChanges": [
                 "23520"
             ],
@@ -176,8 +175,8 @@
                 "Type": "Platform"
             },
             "Mot": "Tram",
-            "RealTime": "/Date(1753327800000-0000)/",
-            "ScheduledTime": "/Date(1753327800000-0000)/",
+            "RealTime": "/Date(1753493400000-0000)/",
+            "ScheduledTime": "/Date(1753493400000-0000)/",
             "State": "InTime",
             "RouteChanges": [
                 "23520"
@@ -187,7 +186,7 @@
                 "Network": "voe"
             },
             "CancelReasons": [],
-            "Occupancy": "Unknown"
+            "Occupancy": "ManySeats"
         },
         {
             "Id": "voe:11011: :R:j25",
@@ -199,7 +198,7 @@
                 "Type": "Platform"
             },
             "Mot": "Tram",
-            "ScheduledTime": "/Date(1753328280000-0000)/",
+            "ScheduledTime": "/Date(1753494900000-0000)/",
             "RouteChanges": [
                 "23520"
             ],
@@ -211,22 +210,21 @@
             "Occupancy": "Unknown"
         },
         {
-            "Id": "voe:21085: :H:j25",
-            "DlId": "de:vvo:21-85",
-            "LineName": "85",
-            "Direction": "Löbtau Süd",
+            "Id": "voe:11011: :H:j25",
+            "DlId": "de:vvo:11-11",
+            "LineName": "11",
+            "Direction": "Zschertnitz",
             "Platform": {
                 "Name": "2",
                 "Type": "Platform"
             },
-            "Mot": "CityBus",
-            "ScheduledTime": "/Date(1753328400000-0000)/",
+            "Mot": "Tram",
+            "ScheduledTime": "/Date(1753495200000-0000)/",
             "RouteChanges": [
-                "23520",
-                "23448"
+                "23520"
             ],
             "Diva": {
-                "Number": "21085",
+                "Number": "11011",
                 "Network": "voe"
             },
             "CancelReasons": [],
