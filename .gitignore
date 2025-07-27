@@ -1,8 +1,22 @@
 files/00unused.json
-#files/local_source.csv 
+
+files/api_response_departures.json
+files/api_response_lines.json
+files/api_response_pointfinder.json
+files/api_response_query_trip.json
+files/api_response_trip_details.json
+
+#files/local_source.csv
+#files/kuerzel_dresden.json
+#files/kuerzel_umland.json
+
 files/local_static.json
 files/web_daily_json.json
+
+
 documentation/*
+web/*
+
 .gitignore
 .gitconfig
      
