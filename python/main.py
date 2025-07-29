@@ -58,13 +58,13 @@ def departure_monitor_tui():
     for departure in departures['Departures']:
         print(f"- {departure['LineName']} to {departure['Direction']}")
         if 'RealTime' in departure:
-            print(f"   Real-time Departure: {vvo_timestamp_to_datetime_class(departure['RealTime'])[0] + TimeZone}")
-        print(f"   Scheduled Departure: {vvo_timestamp_to_datetime_class(departure['ScheduledTime'])[0] + TimeZone}")
+            print(f"   Real-time Departure: {vvo_timestamp_to_datetime_class(departure['RealTime'])[0]}")# + TimeZone}")
+        print(f"   Scheduled Departure: {vvo_timestamp_to_datetime_class(departure['ScheduledTime'])[0]}")# + TimeZone}")
         print(f"   Platform: {departure['Platform']['Name']}")
 
 
 
 
 
-#departure_monitor_tui()
-line_info_tui()
+departure_monitor_tui()
+#line_info_tui()
