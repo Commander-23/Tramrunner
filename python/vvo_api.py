@@ -44,7 +44,7 @@ def vvo_api_pointfinder(query: str, limit: int = 0, stopsOnly: bool = False, reg
         raise ValueError("Query parameter cannot be empty.")
     
     
-    params = {
+    query_params = {
         "query": query,
         "limit": limit,
         "stopsOnly": stopsOnly,
@@ -52,26 +52,9 @@ def vvo_api_pointfinder(query: str, limit: int = 0, stopsOnly: bool = False, reg
         "stopShortcuts": stopShortcuts
     }
     # {'query': 'Räcknitzhöhe', 'limit': 10, 'stopsOnly': True, 'regionalOnly': False, 'stopShortcuts': False}
-
-
-    try:
-        response = requests.get(defaulturl, params=params, headers=default_headers, timeout=5, verify=True) 
-        if response.status_code == 200:
-            content = json.loads(response.content.decode('utf-8'))
-            # response {'PointStatus': 'Identified', 'Status': {'Code': 'Ok'}, 'Points': ['33000313|||Räcknitzhöhe|5655709|4622355|0||'], 'ExpirationTime': '/Date(1753115786301+0200)/'}
-            
-            output = content['Points'][0].split('|')
-            # outputs the first point in the list, e.g. ['33000313', '', 'Räcknitzhöhe', '5655709', '4622355', '0', '']
-            
-            return output
-        else:
-            raise requests.HTTPError('HTTP Status: {}'.format(response.status_code))    
-    except requests.RequestException as e:
-        print(f"Failed to access VVO pointfinder. Request Exception", e)
-        response = None
-    
-    if response is None:
-        return None
+    api_response = query_vvo_api(defaulturl, default_headers, query_params)
+    output = api_response['Points'][0].split('|')
+    return output
 
 def vvo_api_departure_monitor(stopid: str, limit: int = 0, time: str = '' , isarrival: bool = False, shorttermchanges: bool = False, mot: list = None):
     """

@@ -6,7 +6,7 @@ import os
 
 def get_stop_from_shortname(rawSearchInput, csv_path=None):
     if csv_path is None:
-        csv_path = os.path.join(os.path.dirname(__file__), 'shortnames_dresden.csv')
+        csv_path = os.path.join(os.path.dirname(__file__), '/home/cmdr/tramrunner/files/kuerzel_dresden.csv')
     searchTerm = rawSearchInput.upper()
     with open(csv_path, 'r', encoding='utf-8') as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=';')

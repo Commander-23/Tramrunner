@@ -1,8 +1,6 @@
 import csv
-
-
+import os
 from typing import Dict
-
 import pprint
 
 
@@ -323,4 +321,3 @@ if __name__ == "__main__":
                 if line['LineNr'] == "11":
                     print(f"Line {line['LineNr']}: {line['Route']}")
             print()
-
