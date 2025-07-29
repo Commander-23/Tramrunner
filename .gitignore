@@ -17,6 +17,7 @@ files/web_daily_json.json
 
 python/__pycache__/*
 
+gui/*
 documentation/*
 web/*
 
