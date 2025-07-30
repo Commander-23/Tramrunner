@@ -52,9 +52,7 @@ def vvo_api_pointfinder(query: str, limit: int = 0, stopsOnly: bool = False, reg
         "stopShortcuts": stopShortcuts
     }
     # {'query': 'Räcknitzhöhe', 'limit': 10, 'stopsOnly': True, 'regionalOnly': False, 'stopShortcuts': False}
-    api_response = query_vvo_api(defaulturl, default_headers, query_params)
-    output = api_response['Points'][0].split('|')
-    return output
+    return query_vvo_api(defaulturl, default_headers, query_params)
 
 def vvo_api_departure_monitor(stopid: str, limit: int = 0, time: str = '' , isarrival: bool = False, shorttermchanges: bool = False, mot: list = None):
     """
@@ -190,3 +188,20 @@ def vvo_timestamp_to_datetime_class(input: str):
     timezone_delta = timedelta(hours=tz_offset_hh, minutes=tz_offset_mm)
     
     return human_readable_time, timezone_delta
+
+def get_stop_id_from_pointfinder(query: str) -> str:
+    """
+    query the VVO pointfinder API to get the stop ID for a given query.
+
+    Args:
+        query (str): The query to search for in the VVO API.
+
+    Returns:
+        str: The stop ID for the given query.
+    """
+    api_response = vvo_api_pointfinder(query=query, limit=10, stopsOnly=True, regionalOnly=True)
+    if api_response is not None and 'Points' in api_response:
+        return api_response['Points'][0].split('|')[0]
+    else:
+        print("Failed to retrieve stop ID from pointfinder.")
+        return None

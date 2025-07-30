@@ -20,6 +20,7 @@ python/__pycache__/*
 gui/*
 documentation/*
 web/*
+.venv/*
 
 .gitignore
 .gitconfig
