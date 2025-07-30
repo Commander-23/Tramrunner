@@ -15,7 +15,7 @@ def query_vvo_api(url: str, headers: dict, params: dict = None) -> dict:
         raise ValueError("URL cannot be empty.")
     
     try:
-        response = requests.get(url, params=params, headers=headers, timeout=5, verify=True) 
+        response = requests.get(url, params=params, headers=headers, timeout=10, verify=True) 
         if response.status_code == 200:
             content = json.loads(response.content.decode('utf-8'))
             
