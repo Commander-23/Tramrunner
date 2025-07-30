@@ -68,10 +68,10 @@ def departure_monitor_tui(userinput=None):
             for departure in api_response['Departures']:
                 if 'RealTime' in departure:
                     real_departure_time = vvo_timestamp_to_datetime_class(departure['RealTime'])[0]
-                    print(f"- {departure['LineName']} to {departure['Direction']}:\t\tReal-time: {real_departure_time.strftime("%H:%M")}")
+                    print(f"- {departure['LineName']}\t{departure['Direction']}:\t\tReal-time: {real_departure_time.strftime("%H:%M")}")
                 else:
                     scheduled_departure_time = vvo_timestamp_to_datetime_class(departure['ScheduledTime'])[0]
-                    print(f"- {departure['LineName']} to {departure['Direction']}:\t\tScheduled: {scheduled_departure_time.strftime("%H:%M")}")
+                    print(f"- {departure['LineName']}\t{departure['Direction']}:\t\tScheduled: {scheduled_departure_time.strftime("%H:%M")}")
 
     except Exception as e:
         print("\aAn Error Occured")
