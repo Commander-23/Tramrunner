@@ -1,26 +1,20 @@
-files/00unused.json
+.venv/*
 
-files/api_response_departures.json
-files/api_response_lines.json
-files/api_response_pointfinder.json
-files/api_response_query_trip.json
-files/api_response_trip_details.json
+#documentation/*
 
-files/linie11.json
-files/linie11.csv
-#files/local_source.csv
 #files/kuerzel_dresden.json
 #files/kuerzel_umland.json
-
+files/linie11.csv
+files/linie11.json
+#files/local_source.csv
 files/local_static.json
 files/web_daily_json.json
 
+gui/*
+
 python/__pycache__/*
 
-gui/*
-documentation/*
-web/*
-.venv/*
+www/*
 
 .gitignore
 .gitconfig
