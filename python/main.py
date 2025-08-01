@@ -4,35 +4,18 @@ from static_vvo import write_to_json, web_get_json, load_geojson, search_geojson
 from datetime import datetime, timedelta
 import os
 import sys
-
-print("\n"*3)
-script_directory = os.path.dirname(os.path.abspath(sys.argv[0]))
-print(script_directory)
-
 # define filepaths for output files
+script_directory = os.path.dirname(os.path.abspath(sys.argv[0]))
 path_pointfinder = script_directory + "/cached_results/api_response_pointfinder.json"
 path_departure_monitor = script_directory + "/cached_results/api_response_departures.json"
 path_trip_details = script_directory + "/cached_results/api_response_trip_details.json"
 path_query_trip = script_directory + "/cached_results/api_response_query_trip.json"
 path_lines = script_directory + "/cached_results/api_response_lines.json"
 
-"""
-stopid = 0
-lines = vvo_api_lines(stop_id)
-pointfinder = vvo_api_pointfinder(stop_id, limit=10, stopsOnly=True, regionalOnly=False, stopShortcuts=False)
-trip_details =None #vvo_api_trip_details(tripid='', time='', stop_id = stop_id, mapdata=False)
-query_trip = None #vvo_api_query_trip(origin='', destination='', shorttermchanges=False, time='', isArrivalTime=False)
-lines = vvo_api_lines(stop_id)
-"""
-
 def fill_json_data():
     """
     fills in the reference documents
     """
-
-    # hbf 33000028
-    # ull 33000302
-
     write_to_json(vvo_api_pointfinder(query="Hauptbahnhof", limit=3), path_pointfinder)
     write_to_json(vvo_api_departure_monitor(stopid="33000028", limit=3), path_departure_monitor)
     #write_to_json(vvo_api_trip_details(tripid='', time='', stop_id = ''), path_trip_details)
@@ -40,13 +23,9 @@ def fill_json_data():
     write_to_json(vvo_api_lines(stopid="33000028"), path_lines)
 
 def line_info_tui(start, destination):
-    #userinput = "rac"#input("Enter a stop name or ID: ")
-    #stop_id = vvo_api_pointfinder(userinput, limit=10, stopsOnly=True)[0]
-    #mot = ["Tram"]
-    #departures = vvo_api_departure_monitor(stop_id, limit=10, time='', isarrival=False, shorttermchanges=False, mot = mot)
-    #print(departures)
-    #TimeZone = vvo_timestamp_to_datetime_class(departures['ExpirationTime'])[1]
-
+    """
+    """
+    
     start_stop_id = get_stop_id_from_pointfinder(start)
     destination_stop_id = get_stop_id_from_pointfinder(destination)
 
@@ -78,7 +57,6 @@ def line_info_tui(start, destination):
         print(f"    Arrival Time: {vvo_timestamp_to_datetime_class(stop['ArrivalTime'])[0]}\n")# + TimeZone}\n")
         #print("")
 
-
     
 def departure_monitor_tui(userinput=None):
     """
@@ -97,7 +75,6 @@ def departure_monitor_tui(userinput=None):
     
     try:
         api_response = vvo_api_departure_monitor(stop_id, limit=6)
-        
         if 'Departures' in api_response:
             print("\nStation Name:", api_response['Name'])
             print("City:", api_response['Place'])
@@ -117,9 +94,6 @@ def departure_monitor_tui(userinput=None):
     except Exception as e:
         print("\aAn Error Occured")
         print(e)
-    write_to_json(api_response, path_departure_monitor)
-
-fill_json_data()
 
 start = input("Starting location: ")
 destination = input("Destination: ")
