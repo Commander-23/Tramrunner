@@ -1,0 +1,77 @@
+{
+    "Name": "Hauptbahnhof",
+    "Status": {
+        "Code": "Ok"
+    },
+    "Place": "Dresden",
+    "ExpirationTime": "/Date(1754014402764+0200)/",
+    "Departures": [
+        {
+            "Id": "voe:11007: :R:j25",
+            "DlId": "de:vvo:11-7",
+            "LineName": "7",
+            "Direction": "Weixdorf",
+            "Platform": {
+                "Name": "1",
+                "Type": "Platform"
+            },
+            "Mot": "Tram",
+            "RealTime": "/Date(1754014440000-0000)/",
+            "ScheduledTime": "/Date(1754014440000-0000)/",
+            "State": "InTime",
+            "RouteChanges": [
+                "23520"
+            ],
+            "Diva": {
+                "Number": "11007",
+                "Network": "voe"
+            },
+            "CancelReasons": [],
+            "Occupancy": "Unknown"
+        },
+        {
+            "Id": "ddb:92D03: :H:j25",
+            "DlId": "de:vvo:10-3",
+            "LineName": "S3",
+            "Direction": "Tharandt Bahnhof",
+            "Platform": {
+                "Name": "2",
+                "Type": "Railtrack"
+            },
+            "Mot": "SuburbanRailway",
+            "RealTime": "/Date(1754014800000-0000)/",
+            "ScheduledTime": "/Date(1754014800000-0000)/",
+            "State": "InTime",
+            "RouteChanges": [],
+            "Diva": {
+                "Number": "92D03",
+                "Network": "ddb"
+            },
+            "CancelReasons": [],
+            "Occupancy": "Unknown"
+        },
+        {
+            "Id": "voe:11003: :R:j25",
+            "DlId": "de:vvo:11-3",
+            "LineName": "3",
+            "Direction": "Coschütz",
+            "Platform": {
+                "Name": "4",
+                "Type": "Platform"
+            },
+            "Mot": "Tram",
+            "RealTime": "/Date(1754014920000-0000)/",
+            "ScheduledTime": "/Date(1754014920000-0000)/",
+            "State": "InTime",
+            "RouteChanges": [
+                "23520"
+            ],
+            "Diva": {
+                "Number": "11003",
+                "Network": "voe"
+            },
+            "CancelReasons": [],
+            "Occupancy": "ManySeats"
+        }
+    ]
+}

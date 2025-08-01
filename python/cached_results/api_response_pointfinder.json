@@ -1,0 +1,12 @@
+{
+    "PointStatus": "List",
+    "Status": {
+        "Code": "Ok"
+    },
+    "Points": [
+        "33000028|||Hauptbahnhof|5657517|4621643|0||",
+        "33000036|||Hauptbahnhof (Strehlener Str.)|5657379|4621741|0||",
+        "33000032|||Hauptbahnhof Nord|5657680|4621791|0||"
+    ],
+    "ExpirationTime": "/Date(1754100793686+0200)/"
+}
