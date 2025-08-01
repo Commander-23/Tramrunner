@@ -133,8 +133,8 @@ def write_to_json(json_data: Dict, output_path: str):
         write_to_json(feature_collection, '/path/to/output.json)
     """
     import json
-    with open(output_path, mode='w', encoding='utf-8') as geojson_file:
-        json.dump(json_data, geojson_file, ensure_ascii=False, indent=4)
+    with open(output_path, mode='w', encoding='utf-8') as json_file:
+        json.dump(json_data, json_file, ensure_ascii=False, indent=4)
 
 
 

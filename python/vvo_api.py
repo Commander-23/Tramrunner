@@ -152,7 +152,7 @@ def vvo_api_query_trip(origin: str, destination: str, shorttermchanges: bool = F
         "isArrivalTime": isArrivalTime
     }
 
-    return query_vvo_api(defaulturl, default_headers, query_params)
+    return query_vvo_api(defaulturl, default_headers, query_params)['Routes']
 
 def vvo_api_route_changes(shortterm: bool = True):
     """
