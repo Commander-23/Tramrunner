@@ -19,9 +19,10 @@ def fill_json_data():
     write_to_json(vvo_api_pointfinder(query="Hauptbahnhof", limit=3), path_pointfinder)
     write_to_json(vvo_api_departure_monitor(stopid="33000028", limit=3), path_departure_monitor)
     #write_to_json(vvo_api_trip_details(tripid='', time='', stop_id = ''), path_trip_details)
-    write_to_json(vvo_api_query_trip(origin="33000028", destination="33000302"), path_query_trip)
+    write_to_json(vvo_api_query_trip(origin="33000262", destination="33003815"), path_query_trip)
     write_to_json(vvo_api_lines(stopid="33000028"), path_lines)
 
+fill_json_data()
 def line_info_tui(start, destination):
     """
     """
@@ -35,7 +36,7 @@ def line_info_tui(start, destination):
 
 
     query_trip = vvo_api_query_trip(start_stop_id, destination_stop_id, shorttermchanges=False, time='', isArrivalTime=False)
-    regular_stops = query_trip["Routes"][0]['PartialRoutes'][0]['RegularStops']
+    #regular_stops = query_trip["Routes"][0]['PartialRoutes'][0]['RegularStops']
     # mot_chain = query
 
     write_to_json(query_trip, path_query_trip)

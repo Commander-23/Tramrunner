@@ -24,6 +24,26 @@ The response for querying trips is a list of possible routes. Each route is a di
 }
 ```
 
+|Key                          |Type     |Value                                          |description|
+|-----------------------------|---------|-----------------------------------------------|---|
+|`PriceLevel`                 |Int      |`1`                                            |Number of farezones|
+|`Price`                      |String   |`3,40`                                         |Price for a one way ticket in euros|
+|`PriceDayTicket`             |String   |`9,00`                                         |Price for a day ticket in euros|
+|`Net`                        |String   |`voe`                                          |Transportation Network|
+|`Duration`                   |Int      |`42`                                           |Length of the trip in minutes|
+|`Interchanges`               |Int      |`2`                                            |Number of interchanges in a trip|
+|`MotChain`                   |List     |see [MotChain section](#motchain)              |gives overview about the MOT of each partial trip|
+|`NumberOfFareZones`          |String   |`1 Tarifzone`                                  |Number of farezones for a single ticket|
+|`NumberOfFareZonesDayTicket` |String   |`1 Tarifzone`                                  |Number of farezones for a day ticket|
+|`FareZoneNames`              |String   |`TZ Dresden (10)`                              |Name of all farezones for a single ticket|
+|`FareZoneNamesDayTicket`     |String   |`TZ Dresden (10)`                              |Name of all farezones for a day ticket|
+|`FareZoneOrigin`             |Int      |`10`                                           |Farezone id of the origin|
+|`FareZoneDestination`        |Int      |`10`                                           |Farezone id of the destination|
+|`RouteId`                    |String   |`0`                                            |route id |
+|`PartialRoutes`              |List     |see [partial routes section](#partialroutes)   |list of the partial routes that make up the trip|
+|`MapData`                    |Lsit     |see [map data section](#mapdata)               |map data, use case unkown|
+|`Tickets`                    |List     |see [Tickets section](#tickets)                |list of availabile tickets for the queried trip|
+
 ## MotChain
 
 The `MotChain` key contains a list of dictionaries that contain information about the different modes of transportation that are part of the trip.
@@ -65,6 +85,17 @@ The `PartialRoutes` key contains a list of dictionaries that contain detailed in
     "PreviousDepartureTimes": ["/Date(1754013000000-0000)/", "/Date(1754009400000-0000)/"]
 }
 ```
+
+|Key                          |Type     |Value                                          |description|
+|-----------------------------|---------|-----------------------------------------------|---|
+|`PartialRouteId`             |Int      |`1`                                            |Id of the Partial Route|
+|`Duration`                   |Int      |`4`                                            |Duration of the partial route in minutes|
+|`Mot`                        |Dict     |`{"Type": "Tram", "Name": "11"}`               |mode of transport information|
+|`MapDataIndex`               |Int      |`1`                                            |Index for the map data|
+|`Shift`                      |String   |`None`                                         |???|
+|`RegularStops`               |List     |see regular stops section                      |List of all the stops involved in the partial trip|
+|`NextDepartureTimes`         |List     |`["/Date(1754016600000-0000)/", "/Date(1754017860000-0000)/"]`|NextDepartureTime, NextDepartureRealTime|
+|`PreviousDepartureTimes`     |List     |`["/Date(1754013000000-0000)/", "/Date(1754009400000-0000)/"]`|PreviousDepartureTime, PreviousDepartureRealTime|
 
 ### RegularStops
 
@@ -110,7 +141,7 @@ To be done
 ]
 ```
 
-## Tickests
+## Tickets
 
 returns a list of availabile tickest for the trip
 
