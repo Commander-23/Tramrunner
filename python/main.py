@@ -75,7 +75,7 @@ def departure_monitor_tui(userinput=None):
     mot = ["Tram", "CityBus", "IntercityBus", "SuburbanRailway", "Train", "Cableway", "Ferry", "HailedSharedTaxi"]
     
     try:
-        api_response = vvo_api_departure_monitor(stop_id, limit=6)
+        api_response = vvo_api_departure_monitor(stop_id, limit=18)
         if 'Departures' in api_response:
             print("\nStation Name:", api_response['Name'])
             print("City:", api_response['Place'])
