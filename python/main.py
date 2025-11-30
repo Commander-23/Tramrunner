@@ -41,16 +41,20 @@ def line_info_tui(start, destination):
 
     write_to_json(query_trip, path_query_trip)
 
-
+    print(partial_route_digger(query_trip))
 
     for route in query_trip['Routes']:
-        print("\n")
+        #print("\n")
+        print(f"\nRouteId: {route['RouteId']}")
         for chain in route['MotChain']:
             print(f"- {chain['Name']}\t{chain['Direction']}")
-            #for chain_short in chain['MotChain']:
-                
-
+              
     return
+#    for trip in query_trip['Routes'][0]['PartialRoutes']:
+#        print(stop[])
+#
+
+
     print("\nZschernitz --> Bühlau")
     for stop in regular_stops:
         print(f"{stop['Name']}")
@@ -58,7 +62,31 @@ def line_info_tui(start, destination):
         print(f"    Arrival Time: {vvo_timestamp_to_datetime_class(stop['ArrivalTime'])[0]}\n")# + TimeZone}\n")
         #print("")
 
+<<<<<<< HEAD
+=======
+    #write_to_json(query_trip, path_query_trip)
+    #write_to_json(departures, path_departures)
+
+def partial_route_digger(path_query_trip):
+>>>>>>> 59d611b (sum response digging)
     
+    # where to find
+    # foo: route1, route2, just the diffren results
+    # bar: tram_ride1, foothpath2, pices of the whole route with route info in them
+    #
+    #
+    # jsonobj --> Routes[foo] --> Route_pieces[bar] --> RegularStops[n] --> {DataId:}
+    
+    for route in path_query_trip['Routes']:
+        for partial_route in route['PartialRoutes']:
+            for stops in partial_route['RegularStops']:
+                print("__")
+
+    
+
+
+    return
+
 def departure_monitor_tui(userinput=None):
     """
     Run the departure monitor application.
