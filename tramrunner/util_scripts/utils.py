@@ -1,14 +1,29 @@
-import os
+import pathlib
 import requests
 
+base_dir = pathlib.Path(__file__).parent.parent.parent
+
+
+def web_get(url:str):
+    """
+    simple web get
+    """
+    try:
+        with requests.Session() as session:
+            response = session.get(url)
+            response.raise_for_status()
+            return response
+    except requests.exceptions.RequestException as e:
+        print(f"Failed to access: {e}")
+        return None
 
 def update_static_files():
     """
     Update the static files in the project.
     source: https://github.com/kiliankoe/vvo
     """
-
-    static_urls={
+    static_file_dir = base_dir/'data'/'static_files'
+    static_urls = {
         'stations.json':"https://raw.githubusercontent.com/kiliankoe/vvo/master/data/stations.json",
         'stations.geojson':"https://raw.githubusercontent.com/kiliankoe/vvo/master/data/stations.geojson",
         'stations.csv':"https://raw.githubusercontent.com/kiliankoe/vvo/master/data/stations.csv",
@@ -22,14 +37,13 @@ def update_static_files():
         
         print(file_name)
         print(url)
+        print(f"Downloading {file_name} from {url}...")
+        response = requests.get(url)
+        if response is not None:
+            with open(f"{static_file_dir}/{file_name}", "wb") as f:
+                f.write(response.content)
+                print(f"saved")
         
-        #try:
-        #    with requests.Session() as session:
-        #        response = session.get(static_url)
-        #        response.raise_for_status()
-        #except requests.RequestException as web_get_err:
-        #    print(f"Error fetching data: {web_get_err}")
-        #    return None
 
 
 if __name__ == "__main__":
