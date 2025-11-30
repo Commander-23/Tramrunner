@@ -21,6 +21,8 @@ def update_static_files():
     """
     Update the static files in the project.
     source: https://github.com/kiliankoe/vvo
+
+    there is a nice formating script in the scripts dir of this repo kiliankoe/vvo
     """
     static_file_dir = base_dir/'data'/'static_files'
     static_urls = {
