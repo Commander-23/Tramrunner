@@ -76,8 +76,8 @@
             "Name": "7",
             "Mot": "Tram",
             "Changes": [
-                "23745",
                 "23703",
+                "23745",
                 "23520"
             ],
             "Directions": [
@@ -394,6 +394,7 @@
             "Name": "333",
             "Mot": "PlusBus",
             "Changes": [
+                "23453",
                 "23511",
                 "22979"
             ],
@@ -426,6 +427,7 @@
             "Name": "360",
             "Mot": "PlusBus",
             "Changes": [
+                "23771",
                 "23612",
                 "23586"
             ],
@@ -569,6 +571,9 @@
         {
             "Name": "352",
             "Mot": "IntercityBus",
+            "Changes": [
+                "23771"
+            ],
             "Directions": [
                 {
                     "Name": "Bannewitz Wendeplatz",
@@ -597,6 +602,9 @@
         {
             "Name": "365",
             "Mot": "IntercityBus",
+            "Changes": [
+                "23771"
+            ],
             "Directions": [
                 {
                     "Name": "Bienenmühle, Bahnhof",
@@ -625,6 +633,9 @@
         {
             "Name": "366",
             "Mot": "IntercityBus",
+            "Changes": [
+                "23771"
+            ],
             "Directions": [
                 {
                     "Name": "Possendorf Kastanienallee",
@@ -999,5 +1010,5 @@
     "Status": {
         "Code": "Ok"
     },
-    "ExpirationTime": "/Date(1754028324024+0200)/"
+    "ExpirationTime": "/Date(1754236527742+0200)/"
 }

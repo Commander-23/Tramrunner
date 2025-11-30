@@ -4,70 +4,74 @@
         "Code": "Ok"
     },
     "Place": "Dresden",
-    "ExpirationTime": "/Date(1754014402764+0200)/",
+    "ExpirationTime": "/Date(1754231764510+0200)/",
     "Departures": [
         {
-            "Id": "voe:11007: :R:j25",
-            "DlId": "de:vvo:11-7",
-            "LineName": "7",
-            "Direction": "Weixdorf",
+            "Id": "ddb:92D08: :R:j25",
+            "DlId": "de:vvo:1-8",
+            "LineName": "S8",
+            "Direction": "Pulsnitz Bahnhof",
             "Platform": {
-                "Name": "1",
-                "Type": "Platform"
-            },
-            "Mot": "Tram",
-            "RealTime": "/Date(1754014440000-0000)/",
-            "ScheduledTime": "/Date(1754014440000-0000)/",
-            "State": "InTime",
-            "RouteChanges": [
-                "23520"
-            ],
-            "Diva": {
-                "Number": "11007",
-                "Network": "voe"
-            },
-            "CancelReasons": [],
-            "Occupancy": "Unknown"
-        },
-        {
-            "Id": "ddb:92D03: :H:j25",
-            "DlId": "de:vvo:10-3",
-            "LineName": "S3",
-            "Direction": "Tharandt Bahnhof",
-            "Platform": {
-                "Name": "2",
+                "Name": "10",
                 "Type": "Railtrack"
             },
             "Mot": "SuburbanRailway",
-            "RealTime": "/Date(1754014800000-0000)/",
-            "ScheduledTime": "/Date(1754014800000-0000)/",
+            "RealTime": "/Date(1754231700000-0000)/",
+            "ScheduledTime": "/Date(1754231700000-0000)/",
             "State": "InTime",
-            "RouteChanges": [],
+            "RouteChanges": [
+                "23415"
+            ],
             "Diva": {
-                "Number": "92D03",
+                "Number": "92D08",
                 "Network": "ddb"
             },
             "CancelReasons": [],
             "Occupancy": "Unknown"
         },
         {
-            "Id": "voe:11003: :R:j25",
-            "DlId": "de:vvo:11-3",
-            "LineName": "3",
-            "Direction": "Coschütz",
+            "Id": "voe:23333: :R:j25",
+            "DlId": "de:vvo:23-333",
+            "LineName": "333",
+            "Direction": "Pirnaischer Platz",
+            "Platform": {
+                "Name": "5",
+                "Type": "Platform"
+            },
+            "Mot": "PlusBus",
+            "RealTime": "/Date(1754231880000-0000)/",
+            "ScheduledTime": "/Date(1754231520000-0000)/",
+            "State": "Delayed",
+            "RouteChanges": [
+                "23511",
+                "22979"
+            ],
+            "Diva": {
+                "Number": "23333",
+                "Network": "voe"
+            },
+            "CancelReasons": [],
+            "Occupancy": "Unknown"
+        },
+        {
+            "Id": "voe:11008: :H:j25",
+            "DlId": "de:vvo:11-8",
+            "LineName": "8",
+            "Direction": "Südvorstadt",
             "Platform": {
                 "Name": "4",
                 "Type": "Platform"
             },
             "Mot": "Tram",
-            "RealTime": "/Date(1754014920000-0000)/",
-            "ScheduledTime": "/Date(1754014920000-0000)/",
-            "State": "InTime",
+            "RealTime": "/Date(1754231940000-0000)/",
+            "ScheduledTime": "/Date(1754231760000-0000)/",
+            "State": "Delayed",
             "RouteChanges": [
-                "23520"
+                "23520",
+                "23745"
             ],
             "Diva": {
-                "Number": "11003",
+                "Number": "11008",
                 "Network": "voe"
             },
             "CancelReasons": [],
