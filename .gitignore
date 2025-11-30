@@ -1,18 +1,7 @@
+__pycache__
+
 .venv/*
-
-#documentation/*
-
-#files/kuerzel_dresden.json
-#files/kuerzel_umland.json
-files/linie11.csv
-files/linie11.json
-#files/local_source.csv
-files/local_static.json
-files/web_daily_json.json
-
-gui/*
-
-python/__pycache__/*
+data/generated_files
 
 www/*
 
