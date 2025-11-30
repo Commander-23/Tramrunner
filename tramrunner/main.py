@@ -4,6 +4,8 @@ from static_vvo import write_to_json, web_get_json, load_geojson, search_geojson
 from datetime import datetime, timedelta
 import os
 import sys
+
+
 # define filepaths for output files
 script_directory = os.path.dirname(os.path.abspath(sys.argv[0]))
 path_pointfinder = script_directory + "/cached_results/api_response_pointfinder.json"
@@ -62,13 +64,10 @@ def line_info_tui(start, destination):
         print(f"    Arrival Time: {vvo_timestamp_to_datetime_class(stop['ArrivalTime'])[0]}\n")# + TimeZone}\n")
         #print("")
 
-<<<<<<< HEAD
-=======
     #write_to_json(query_trip, path_query_trip)
     #write_to_json(departures, path_departures)
 
 def partial_route_digger(path_query_trip):
->>>>>>> 59d611b (sum response digging)
     
     # where to find
     # foo: route1, route2, just the diffren results
