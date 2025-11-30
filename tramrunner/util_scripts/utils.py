@@ -36,17 +36,12 @@ def update_static_files():
     }
 
     for file_name, url in static_urls.items():
-        
-        print(file_name)
-        print(url)
         print(f"Downloading {file_name} from {url}...")
         response = requests.get(url)
         if response is not None:
             with open(f"{static_file_dir}/{file_name}", "wb") as f:
                 f.write(response.content)
                 print(f"saved")
-        
-
 
 if __name__ == "__main__":
     update_static_files()
