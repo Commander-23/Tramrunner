@@ -1,5 +1,6 @@
 import pathlib
 import requests
+import json
 
 base_dir = pathlib.Path(__file__).parent.parent.parent
 
@@ -43,5 +44,20 @@ def update_static_files():
                 f.write(response.content)
                 print(f"saved")
 
+def write_to_json(json_data: dict, file_name: str):
+    json_dir = base_dir/'data'/'generated_files'
+    output_path = json_dir/file_name
+    with open(output_path, mode='w', encoding='utf-8') as json_file:
+        json.dump(json_data, json_file, ensure_ascii=False, indent=4)
+
 if __name__ == "__main__":
-    update_static_files()
+    some_json = {
+        
+        "Name": "Hauptbahnhof",
+        "Status": {
+            "Code": "Ok"
+        },
+        "Place": "Dresden"
+    }
+
+    write_to_json(some_json, "test_file.json")
