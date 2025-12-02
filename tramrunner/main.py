@@ -24,7 +24,7 @@ def fill_json_data():
     write_to_json(vvo_api_query_trip(origin="33000262", destination="33003815"), path_query_trip)
     write_to_json(vvo_api_lines(stopid="33000028"), path_lines)
 
-fill_json_data()
+#fill_json_data()
 def line_info_tui(start, destination):
     """
     """
