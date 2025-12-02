@@ -1,27 +1,13 @@
-import pathlib
-import requests
-
-base_dir = pathlib.Path(__file__).parent.parent.parent
-
-
-def web_get(url:str):
-    """
-    simple web get
-    """
-    try:
-        with requests.Session() as session:
-            response = session.get(url)
-            response.raise_for_status()
-            return response
-    except requests.exceptions.RequestException as e:
-        print(f"Failed to access: {e}")
-        return None
+import requests, pathlib
 
 def update_static_files():
     """
     Update the static files in the project.
     source: https://github.com/kiliankoe/vvo
+
+    there is a nice formating script in the scripts dir of this repo kiliankoe/vvo
     """
+    base_dir = pathlib.Path(__file__).parent.parent.parent
     static_file_dir = base_dir/'data'/'static_files'
     static_urls = {
         'stations.json':"https://raw.githubusercontent.com/kiliankoe/vvo/master/data/stations.json",
@@ -34,16 +20,12 @@ def update_static_files():
     }
 
     for file_name, url in static_urls.items():
-        
-        print(file_name)
-        print(url)
         print(f"Downloading {file_name} from {url}...")
         response = requests.get(url)
         if response is not None:
             with open(f"{static_file_dir}/{file_name}", "wb") as f:
                 f.write(response.content)
                 print(f"saved")
-        
 
 
 if __name__ == "__main__":
