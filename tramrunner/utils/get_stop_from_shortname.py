@@ -1,9 +1,20 @@
-import os, csv
+import csv
 import pathlib
 
-def search_csv(rawSearchInput, csv_path=None):
-    if csv_path is None:
-        csv_path = os.path.join(os.path.dirname(__file__), 'shortnames_dresden.csv')
+def search_csv(rawSearchInput:str , region:str="dresden"):
+    """
+    returns first result for search
+    """
+    static_file_dir = pathlib.Path(__file__).parent.parent.parent/'data'/'static_files'
+    if region.lower() == "dresden":
+        csv_path = static_file_dir/'abbreviations_dresden.csv'
+    elif region.lower() == "umland":
+        csv_path = static_file_dir/'abbreviations_regional.csv'
+    else:
+        print("utils.get_stop_from_shortname -- Region not recognized")
+        return None
+
+
     searchTerm = rawSearchInput.upper()
     with open(csv_path, 'r', encoding='utf-8') as csv_file:
         csv_reader = csv.reader(csv_file, delimiter=';')
@@ -14,11 +25,7 @@ def search_csv(rawSearchInput, csv_path=None):
 
 def main():
 
-    base_dir = pathlib.Path(__file__).parent.parent
-    csv_path = base_dir / 'local_data' / 'files' / 'shortnames_dresden.csv'
-    print(csv_path)
-    print(base_dir)
-    print(search_csv('', csv_path))
+    print(search_csv('rac', region="dresden"))
     #get_stop_from_shortname("rac")
 
 if __name__ == "__main__":
