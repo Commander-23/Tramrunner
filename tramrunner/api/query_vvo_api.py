@@ -19,7 +19,6 @@ def query_vvo_api(url: str, headers: dict, params: dict = None) -> dict:
             
             output = content #content['Points'][0].split('|')
             # outputs the first point in the list, e.g. ['33000313', '', 'Räcknitzhöhe', '5655709', '4622355', '0', '']
-            print('hello from api module')
             return output
         else:
             raise requests.HTTPError('HTTP Status: {}'.format(response.status_code))    
