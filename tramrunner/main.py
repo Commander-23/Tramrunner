@@ -6,25 +6,6 @@ import api
 import utils
 
 
-# define filepaths for output files
-script_directory = os.path.dirname(os.path.abspath(sys.argv[0]))
-path_pointfinder = script_directory + "/cached_results/api_response_pointfinder.json"
-path_departure_monitor = script_directory + "/cached_results/api_response_departures.json"
-path_trip_details = script_directory + "/cached_results/api_response_trip_details.json"
-path_query_trip = script_directory + "/cached_results/api_response_query_trip.json"
-path_lines = script_directory + "/cached_results/api_response_lines.json"
-
-def fill_json_data():
-    """
-    fills in the reference documents
-    """
-    write_to_json(api.vvo_pointfinder(query="Hauptbahnhof", limit=3), path_pointfinder)
-    write_to_json(api.vvo_departure_monitor(stopid="33000028", limit=3), path_departure_monitor)
-    #write_to_json(api.vvo_trip_details(tripid='', time='', stop_id = ''), path_trip_details)
-    write_to_json(api.vvo_query_trip(origin="33000262", destination="33003815"), path_query_trip)
-    write_to_json(api.vvo_lines(stopid="33000028"), path_lines)
-
-#fill_json_data()
 def line_info_tui(start, destination):
     """
     """
@@ -41,7 +22,6 @@ def line_info_tui(start, destination):
     #regular_stops = query_trip["Routes"][0]['PartialRoutes'][0]['RegularStops']
     # mot_chain = query
 
-    write_to_json(query_trip, path_query_trip)
 
     print(partial_route_digger(query_trip))
 
