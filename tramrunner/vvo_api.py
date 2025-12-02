@@ -2,32 +2,12 @@ import requests
 import json
 from datetime import datetime, timedelta
 from api import query_vvo_api
+from api import vvo_pointfinder as vvo_api_pointfinder
 
 default_headers = {
     "Content-Type": "application/json",
     "charset": "utf-8"
     }
-
-def vvo_api_pointfinder(query: str, limit: int = 0, stopsOnly: bool = False, regionalOnly: bool = False, stopShortcuts: bool = False):
-    """
-    Find stops based certain parameters.
-    """
-   
-    defaulturl = "https://webapi.vvo-online.de/tr/pointfinder"
-
-    if not query:
-        raise ValueError("Query parameter cannot be empty.")
-    
-    
-    query_params = {
-        "query": query,
-        "limit": limit,
-        "stopsOnly": stopsOnly,
-        "regionalOnly": regionalOnly,
-        "stopShortcuts": stopShortcuts
-    }
-    # {'query': 'Räcknitzhöhe', 'limit': 10, 'stopsOnly': True, 'regionalOnly': False, 'stopShortcuts': False}
-    return query_vvo_api(defaulturl, default_headers, query_params)
 
 def vvo_api_departure_monitor(stopid: str, limit: int = 0, time: str = '' , isarrival: bool = False, shorttermchanges: bool = False, mot: list = None):
     """
