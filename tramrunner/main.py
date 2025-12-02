@@ -1,7 +1,3 @@
-from static_vvo import write_to_json, web_get_json, load_geojson, search_geojson
-from datetime import datetime, timedelta
-import os
-import sys
 import api
 import utils
 
@@ -66,46 +62,7 @@ def partial_route_digger(path_query_trip):
 
     return
 
-def departure_monitor_tui(userinput=None):
-    """
-    Run the departure monitor application.
-    
-    Args:
-        userinput (str, optional): The stop name or ID to query. Defaults to None.
-    """
-    if userinput is not None:
-        stop_id = utils.get_stop_id_from_pointfinder(userinput)
-    else:
-        print("Please provide a stop name or ID.")
-        return
-
-    mot = ["Tram", "CityBus", "IntercityBus", "SuburbanRailway", "Train", "Cableway", "Ferry", "HailedSharedTaxi"]
-    
-    try:
-        api_response = api.vvo_departure_monitor(stop_id, limit=18)
-        if 'Departures' in api_response:
-            print("\nStation Name:", api_response['Name'])
-            print("City:", api_response['Place'])
-
-            expiration_time = utils.vvo_timestamp_to_datetime_class(api_response['ExpirationTime'])[0]
-            print("Expiery Time:", expiration_time.strftime("%H:%M:%S"))
-
-            # Print the departure times
-            for departure in api_response['Departures']:
-                if 'RealTime' in departure:
-                    real_departure_time = utils.vvo_timestamp_to_datetime_class(departure['RealTime'])[0]
-                    print(f"- {departure['LineName']}\t{departure['Direction']}:\t\tReal-time: {real_departure_time.strftime("%H:%M")}")
-                else:
-                    scheduled_departure_time = utils.vvo_timestamp_to_datetime_class(departure['ScheduledTime'])[0]
-                    print(f"- {departure['LineName']}\t{departure['Direction']}:\t\tScheduled: {scheduled_departure_time.strftime("%H:%M")}")
-
-    except Exception as e:
-        print("\aAn Error Occured")
-        print(e)
 
 start = input("Starting location: ")
 destination = input("Destination: ")
-if destination == "":
-    departure_monitor_tui(start)
-else:    #api.vvo_query_trip(origin=start, destination=destination, shorttermchanges=False, time='', isArrivalTime=False)
-    line_info_tui(start, destination)
+line_info_tui(start, destination)
