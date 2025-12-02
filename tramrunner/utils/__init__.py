@@ -1,0 +1,1 @@
+from .update_static_files import update_static_files

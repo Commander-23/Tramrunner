@@ -1,22 +1,4 @@
-import pathlib
-import requests
-import json
-
-base_dir = pathlib.Path(__file__).parent.parent.parent
-
-
-def web_get(url:str):
-    """
-    simple web get
-    """
-    try:
-        with requests.Session() as session:
-            response = session.get(url)
-            response.raise_for_status()
-            return response
-    except requests.exceptions.RequestException as e:
-        print(f"Failed to access: {e}")
-        return None
+import requests, pathlib
 
 def update_static_files():
     """
@@ -25,6 +7,7 @@ def update_static_files():
 
     there is a nice formating script in the scripts dir of this repo kiliankoe/vvo
     """
+    base_dir = pathlib.Path(__file__).parent.parent.parent
     static_file_dir = base_dir/'data'/'static_files'
     static_urls = {
         'stations.json':"https://raw.githubusercontent.com/kiliankoe/vvo/master/data/stations.json",
@@ -44,20 +27,6 @@ def update_static_files():
                 f.write(response.content)
                 print(f"saved")
 
-def write_to_json(json_data: dict, file_name: str):
-    json_dir = base_dir/'data'/'generated_files'
-    output_path = json_dir/file_name
-    with open(output_path, mode='w', encoding='utf-8') as json_file:
-        json.dump(json_data, json_file, ensure_ascii=False, indent=4)
 
 if __name__ == "__main__":
-    some_json = {
-        
-        "Name": "Hauptbahnhof",
-        "Status": {
-            "Code": "Ok"
-        },
-        "Place": "Dresden"
-    }
-
-    write_to_json(some_json, "test_file.json")
+    update_static_files()
