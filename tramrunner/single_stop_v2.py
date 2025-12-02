@@ -1,26 +1,15 @@
 #!/usr/bin/env python3
 
 import dvb
-import csv
-import os
-
-def get_stop_from_shortname(rawSearchInput, csv_path=None):
-    if csv_path is None:
-        csv_path = os.path.join(os.path.dirname(__file__), '/home/cmdr/tramrunner/files/kuerzel_dresden.csv')
-    searchTerm = rawSearchInput.upper()
-    with open(csv_path, 'r', encoding='utf-8') as csv_file:
-        csv_reader = csv.reader(csv_file, delimiter=';')
-        for line in csv_reader:
-            if str(searchTerm) in line:
-                return line[0]
-    return None
+import utils
 
 def monitor_departures(rawSearchInput, time_offset=0, num_results=25, city='Dresden'):
     """
     Returns a formatted string of upcoming departures for a given stop.
     """
     if len(rawSearchInput) == 3:
-        stop = get_stop_from_shortname(rawSearchInput)
+        #stop = get_stop_from_shortname(rawSearchInput)
+        stop = utils.search_csv(rawSearchInput, region="dresden")
     else:
         stop = rawSearchInput
 
