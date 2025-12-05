@@ -28,23 +28,11 @@ def vvo_timestamp_to_datetime_class(dvb_time_noformat: str) -> datetime:
     else:
         timezone_info = timezone.utc
 
-    return datetime.fromtimestamp(timestamp_seconds, tz=timezone_info)
-
-
-    #human_readable_time = datetime.fromtimestamp(int(dvb_time[6:-7])/1000)
-    #
-    #tz_offset_hh = int(dvb_time[19:-4])
-    #tz_offset_mm = int(dvb_time[22:-2])
-    #timezone_delta = timedelta(hours=tz_offset_hh, minutes=tz_offset_mm)
-    #return human_readable_time, timezone_delta
+    timestamp = datetime.fromtimestamp(timestamp_seconds, tz=timezone_info)
+    return timestamp 
 
 if __name__ == "__main__":
-    func_out = vvo_timestamp_to_datetime_class("/Date(1764662520000+0100)/")
-    time_now = datetime.now(timezone.utc)
-    time_diff = time_now - func_out.astimezone(timezone.utc)    
-
-    print(f"\n" + "#"*50 + "\n")
-    print(f"func_out:   {func_out.isoformat(timespec="hours")}")
-    print(f"time_now:   {time_now.isoformat()}")
-    print(f"time_diff:  {time_diff}")
-    print(f"\n" + "#"*50 + "\n")
+    func_out = vvo_timestamp_to_datetime_class("/Date(1767662520000+0100)/")
+    print(f"converted timestamp:        {func_out[0]}")
+    print(f"time diff to current time:  {func_out[1]}")
+    print(f"current Time:               {datetime.now()}")
