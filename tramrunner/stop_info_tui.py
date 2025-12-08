@@ -9,7 +9,8 @@ def stop_info_tui(userinput:str=None):
         return None
     
     #try:
-    departure_monitor_response = api.vvo_departure_monitor(stopid, limit=15)
+    mode_of_transport =['Tram', 'CityBus', 'SuburbanRailway']
+    departure_monitor_response = api.vvo_departure_monitor(stopid, limit=20, mot=mode_of_transport)
     station_name = departure_monitor_response['Name']
     station_city = departure_monitor_response['Place']
     expiration_time = utils.vvo_timestamp_to_datetime_class(departure_monitor_response['ExpirationTime'])
@@ -17,14 +18,14 @@ def stop_info_tui(userinput:str=None):
 
     output_lines = [
         f"\nAbfahrten für '{station_name}':\nUngültig in {expiration_time_human}",
-        f"{'Linie':<8}{'Richtung':<30}{'Ankunft':<10}",
+        f"{'nr':<5}{'Direction':<25}{'Time':<6}{'Diff'}",
         "-" * 48
     ]
     for departure in departure_monitor_response['Departures']:
         line_number = departure.get('LineName')
-        line_direction = departure.get('Direction')
+        line_direction = departure.get('Direction')[:24]
 
-        arrival_scheduled_time = utils.vvo_timestamp_to_datetime_class(departure.get('ScheduledTime')).astimezone().strftime("%H:%M:%S")
+        arrival_scheduled_time = utils.vvo_timestamp_to_datetime_class(departure.get('ScheduledTime')).astimezone().strftime("%H:%M")
         
         arrival_display = arrival_scheduled_time
 
@@ -36,16 +37,20 @@ def stop_info_tui(userinput:str=None):
             arrival_seconds = int(arrival_real_diff.total_seconds())
 
             if arrival_seconds <= 0:
-                arrival_in = f"{arrival_seconds} seconds"
+                arrival_in = f"{arrival_seconds} sec"
             elif arrival_seconds < 60:
-                arrival_in = f"{arrival_seconds} seconds"
+                arrival_in = f"{arrival_seconds} sec"
             else:
                 arrival_minutes = arrival_seconds // 60
-                arrival_in = f"in {arrival_minutes} min"
+                arrival_in = f"{arrival_minutes} min"
 
-            arrival_display = f"{arrival_real_time.astimezone().strftime('%H:%M')} ({arrival_in})"
+            arrival_display = f"{arrival_real_time.astimezone().strftime('%H:%M')} {arrival_in}"
 
-        output_lines.append(f"{line_number:<8}{line_direction:<30}{arrival_display}")
+        if departure.get('State') == 'Delayed':
+            delay_display = "DLY"
+        else: delay_display = ""
+
+        output_lines.append(f"{line_number:<5}{line_direction:<25}{arrival_display:<7}{delay_display:<5}")
     return "\n".join(output_lines)
     #except Exception as e:
     #    print("\aAn Error Occured")
