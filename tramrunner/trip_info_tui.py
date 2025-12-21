@@ -13,36 +13,38 @@ def trip_info_tui(query_trip_data):
             #print(mot_chain_item["Name"])
 
         rtid = trip["RouteId"]
-        print(f"\n\nRoute nr: {rtid}")
+        print(f"\n\nRoute nr: {rtid} {"-"*15}")
         for partial_route in trip["PartialRoutes"]:
             partial_mot = partial_route["Mot"]
-            mot_type = partial_mot.get("ProductName", "mot_type")
+            mot_type = partial_mot.get("Type", "mot_type")
             mot_name = partial_mot.get("Name", "mot_name")
             mot_direction = partial_mot.get("Direction", "???")
+            partial_route_duration = partial_route.get("Duration", "???")
             header = (
                 f"{mot_type} {mot_name} → {mot_direction} "
-                f"({partial_route['Duration']} min)"
+                f"({partial_route_duration} min)"
             )
-            print(header)
-            print("│")
-
-            if partial_route['Mot']['Type'] != "Footpath":
-                stops = partial_route["RegularStops"]
-            else: stops = None
+            print(f"\n{header}")
+            #stops = partial_route["RegularStops"]
+            stops = partial_route.get("RegularStops", "[]")
             for i, stop in enumerate(stops):
                 is_last = i == len(stops) - 1
                 connector = "└─" if is_last else "├─"
-
-                time = utils.vvo_timestamp_to_datetime_class(stop["DepartureTime"]).astimezone().strftime('%H:%M')
-                name = stop["Name"]
-                platform = stop.get("Platform", {}).get("Name", "?")
-                print(f"{connector} {time} {name} [P{platform}]")
+                try:
+                    time = utils.vvo_timestamp_to_datetime_class(stop["DepartureTime"]).astimezone().strftime('%H:%M')
+                    name = stop["Name"]
+                    stop_place = stop.get("Place", "???")
+                    platform = stop.get("Platform", {}).get("Name", "?")
+                except: time = "xx:xx"; name = "noName"; platform = "noName"
+                print(f"{connector} {time} {name}, {stop_place}")
 
             #print(partial_route["PartialRouteId"])
 
 if __name__ == "__main__":
     #stop1 = utils.get_stop_id_from_pointfinder(input("Start: "))
     #stop2 = utils.get_stop_id_from_pointfinder(input("Dest:  "))
-    trip_data = api.vvo_query_trip(stop_id_rac, stop_id_hbf)
+    stop1 = utils.get_stop_id_from_pointfinder("August-Bebel-Straße, Radeberg")
+    stop2 = utils.get_stop_id_from_pointfinder("Siedlung, Wilsdruff")
+    trip_data = api.vvo_query_trip(stop1, stop2)
     utils.write_to_json(trip_data, "response_query_trip.json")
     trip_info_tui(trip_data)
