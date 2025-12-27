@@ -41,10 +41,17 @@ def trip_info_tui(query_trip_data):
             #print(partial_route["PartialRouteId"])
 
 if __name__ == "__main__":
+    userin_start = input("Start: ")
+    userin_stop = input("Dest:  ")
+    if userin_start == "":
+        userin_start = "August-Bebel-Straße, Radeberg"
+    if userin_stop == "":
+        userin_stop = "Siedlung, Wilsdruff"
+
     #stop1 = utils.get_stop_id_from_pointfinder(input("Start: "))
     #stop2 = utils.get_stop_id_from_pointfinder(input("Dest:  "))
-    stop1 = utils.get_stop_id_from_pointfinder("August-Bebel-Straße, Radeberg")
-    stop2 = utils.get_stop_id_from_pointfinder("Siedlung, Wilsdruff")
+    stop1 = utils.get_stop_id_from_pointfinder(userin_start)
+    stop2 = utils.get_stop_id_from_pointfinder(userin_stop)
     trip_data = api.vvo_query_trip(stop1, stop2)
     utils.write_to_json(trip_data, "response_query_trip.json")
     trip_info_tui(trip_data)
