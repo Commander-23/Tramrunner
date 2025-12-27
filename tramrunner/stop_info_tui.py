@@ -17,7 +17,7 @@ def stop_info_tui(userinput:str=None):
     expiration_time_human = expiration_time.strftime("%H:%M:%S")
 
     output_lines = [
-        f"\nAbfahrten für '{station_name}':\nUngültig in {expiration_time_human}",
+        f"Abfahrten für '{station_name}':",
         f"{'nr':<5}{'Direction':<25}{'Time':<6}{'Diff'}",
         "-" * 48
     ]
@@ -51,7 +51,7 @@ def stop_info_tui(userinput:str=None):
         else: delay_display = ""
 
         output_lines.append(f"{line_number:<5}{line_direction:<25}{arrival_display:<7}{delay_display:<5}")
-    return "\n".join(output_lines)
+    return output_lines#"\n".join(output_lines)
     #except Exception as e:
     #    print("\aAn Error Occured")
     #    print(e)
@@ -60,4 +60,6 @@ def stop_info_tui(userinput:str=None):
 
 if __name__ == "__main__":
     userinput = input("Haltestelle: ")
-    print(stop_info_tui(userinput))
+    for line in stop_info_tui(userinput):
+        print(f"{line}")
+    print("bye,bye")
