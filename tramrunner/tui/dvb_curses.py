@@ -96,6 +96,10 @@ class dvb_curse:
         return []
 
 def main(stdscr):
+    # clear and refresh the screen (also kinda 'initiates' the screen) --> lesson learned
+    stdscr.clear()
+    stdscr.refresh()
+
     title = "Tramrunner"
     page_titles = ["Scripts", "Graph View", "Tests"]
     page_select = 0
@@ -122,14 +126,10 @@ def main(stdscr):
         
         if key == ord('q') or key == ord('Q'):
             break
-        
         # select pages
-        elif key == ord('1'):
-            page_select = 0
-        elif key == ord('2'):
-            page_select = 1
-        elif key == ord('3'):
-            page_select = 2
+        elif key in [ord('1'), ord('2'), ord('3')]:
+            page_select = int(chr(key)) - 1
+            pages_bar.draw_pages_bar(page_select)
         # menu item selection keys
         elif key == curses.KEY_UP and menu_item_select > 0:
             menu_item_select -= 1
