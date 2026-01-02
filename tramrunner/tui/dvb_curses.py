@@ -2,24 +2,8 @@ import curses
 import time
 #import stop_info_tui
 import header
+import screen
 
-
-class PageSubMenu:
-    def __init__(self, stdscr, page_menus: list):
-        self.stdscr = stdscr
-        max_h, max_w = self.stdscr.getmaxyx()
-        menu_width = 0
-        # calculate menu width
-        for item in page_menus:
-            menu_width = max(menu_width, len(max(item, key=len)))
-        self.win = curses.newwin(max_h-3, menu_width + 3, 3,3) # One Line Tall, minimum menu width to accomedate all items without overflow, Top of page
-        self.page_menus = page_menus
-
-    def render_sub_menu(self, page_menus, selected):
-        self.win.clear()
-        self.win.box()
-        self.win.addstr(1, 1, "Pos1")
-        self.win.refresh
 
 class dvb_curse:
     def __init__(self, stdscr):
@@ -118,7 +102,7 @@ def main(stdscr):
     page_menus = [
         ["Stop info","Query Trip", "Opt3"],
         ["display menu1"], 
-        ["testies.py", "SayHi!", "Opt3"]  
+        ["testies.py"]  
     ]
     menu_item_select = 0
 
