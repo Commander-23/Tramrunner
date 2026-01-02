@@ -60,10 +60,10 @@ class TitleBar:
     def __init__(self, stdscr, title):
         self.stdscr = stdscr
         max_h, max_w = self.stdscr.getmaxyx()
-        self.win = curses.newwin(1, max_w, 0,0) # One Line Tall, Across whole Terminal, Top of page
+        self.win = curses.newwin(1, max_w, 0,0) # One Line Tall, Across whole Terminal, Top-left of page
         self.title = title
 
-    def draw_title_bar(self, ):
+    def draw_title_bar(self):
         """draw the title bar at the top of the window"""
         self.win.clear() # Clear any Previous Content
 
@@ -85,7 +85,7 @@ class TitleBar:
             title_bar = f"{decoration_left}{filler_left}{title_text}{filler_right}{decoration_right}"
         else:
             # Fallback if window is too narrow
-            title_bar = f"{title_text[:win_max_w]}"#{decoration_left}{title_text}{filler_right}"
+            title_bar = f"{self.title[:win_max_w]}"#{decoration_left}{title_text}{filler_right}"
         
         # insstr because add string has trouble inserting at bottom right corner of display
         self.win.insstr(0, 0, title_bar[:win_max_w], curses.A_BOLD)
