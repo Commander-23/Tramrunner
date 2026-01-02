@@ -99,12 +99,17 @@ class PageSubMenu:
         menu_width = 0
         # calculate menu width
         for item in page_menus:
-            menu_width = max(menu_width, len(max(item, key=len)))
-        self.win = curses.newwin(10, 10, 10, 10,) # One Line Tall, minimum menu width to accomedate all items without overflow, Top of page
+            menu_width = max(menu_width, len(max(item, key=len)))+1
+        self.win = curses.newwin(max_h - 2, menu_width, 2, 0,) # One Line Tall, minimum menu width to accomedate all items without overflow, Top of page
         self.page_menus = page_menus
 
-    def render_sub_menu(self, page_menus, selected):
+    def render_sub_menu(self, menu_items, selected):
         self.win.clear()
         self.win.box()
-        self.win.addstr(1, 1, "Pos1")
+        for idx, item in enumerate(menu_items):
+            y = idx + 2
+            if idx == selected:
+                self.win.addstr(y, 0, f"├─{item}", curses.A_REVERSE)
+            else:
+                self.win.addstr(y, 0, f"│ {item}")
         self.win.refresh()

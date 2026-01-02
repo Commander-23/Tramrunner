@@ -24,11 +24,9 @@ def main(stdscr):
     title_bar.draw_title_bar()
     pages_bar = header.PagesBar(stdscr, page_titles)
     pages_bar.draw_pages_bar(page_select)
-
-
-
-   
-
+    sub_menu = screen.PageSubMenu(stdscr, page_menus)
+    sub_menu.render_sub_menu(page_menus[page_select], menu_item_select)
+  
     while True:
 
         # Handle input
@@ -36,17 +34,25 @@ def main(stdscr):
         
         if key == ord('q') or key == ord('Q'):
             break
-        # select pages
+
+        # select pages and move page if needed
         elif key in [ord('1'), ord('2'), ord('3')]:
             page_select = int(chr(key)) - 1
+            if menu_item_select >= len(page_menus[page_select]):
+                menu_item_select = len(page_menus[page_select])-1
             pages_bar.draw_pages_bar(page_select)
+            sub_menu.render_sub_menu(page_menus[page_select], menu_item_select)
+
         # menu item selection keys
         elif key == curses.KEY_UP and menu_item_select > 0:
             menu_item_select -= 1
+            pages_bar.draw_pages_bar(page_select)
+            sub_menu.render_sub_menu(page_menus[page_select], menu_item_select)
         elif key == curses.KEY_DOWN and menu_item_select < len(page_menus[page_select]) - 1:
-            menu_item_select += 1   
-    
+            menu_item_select += 1
+            pages_bar.draw_pages_bar(page_select)
+            sub_menu.render_sub_menu(page_menus[page_select], menu_item_select)
+
 
 if __name__ == "__main__":
-    #stop_info_tui.stop_info_tui("rac")
     curses.wrapper(main)
