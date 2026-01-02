@@ -3,6 +3,24 @@ import time
 #import stop_info_tui
 import header
 
+
+class PageSubMenu:
+    def __init__(self, stdscr, page_menus: list):
+        self.stdscr = stdscr
+        max_h, max_w = self.stdscr.getmaxyx()
+        menu_width = 0
+        # calculate menu width
+        for item in page_menus:
+            menu_width = max(menu_width, len(max(item, key=len)))
+        self.win = curses.newwin(max_h-3, menu_width + 3, 3,3) # One Line Tall, minimum menu width to accomedate all items without overflow, Top of page
+        self.page_menus = page_menus
+
+    def render_sub_menu(self, page_menus, selected):
+        self.win.clear()
+        self.win.box()
+        self.win.addstr(1, 1, "Pos1")
+        self.win.refresh
+
 class dvb_curse:
     def __init__(self, stdscr):
         self.stdscr = stdscr
@@ -17,10 +35,10 @@ class dvb_curse:
         curses.init_pair(3, curses.COLOR_YELLOW, curses.COLOR_BLACK)
     def create_windows(self):
         """
-        ╭───────────────────┨ Tramrunner ┠───────────────────╮
-        ╰─┄ 1. scripts ┄─┄ 2. Graph View ┄─┄ 3. Tests ┄──────╯
-        ╭────────────────────────────────────────────────────╮
-        │                                                    │
+        ╭───────────────────┨ Tramrunner ┠───────────────────╮  -- Window title bar
+        ╰─┄ 1. scripts ┄─┄ 2. Graph View ┄─┄ 3. Tests ┄──────╯  -- window pages bar
+        ╭────────────────────────────────────────────────────╮  -- window page sub menu
+        │                                                    │  -- window content
         │                                                    │
         │                                                    │
         │                                                    │
@@ -38,11 +56,8 @@ class dvb_curse:
         left_width = max_x // 3
         menu_width = max_x // 5
 
-        self.left_panel = curses.newwin(max_y - 6 , menu_width, 4, 0)
-        self.script_window = curses.newwin(max_y - 6, max_x - menu_width, 4, menu_width)
-        #self.header = curses.newwin(3, max_x, 0, 0)
-        #self.right_panel = curses.newwin(max_y - 6, max_x - menu_width, 3, menu_width)
-        #self.status = curses.newwin(3, max_x, max_y - 3, 0)
+        #self.submenu_panel = curses.newwin(max_y - 6 , menu_width, 4, 0)
+        #self.script_window = curses.newwin(max_y - 6, max_x - menu_width, 4, menu_width)
 
 
     def draw_left_panel(self, items, selected):
@@ -107,13 +122,18 @@ def main(stdscr):
     ]
     menu_item_select = 0
 
-    app = dvb_curse(stdscr)
-    app.run()
     title_bar = header.TitleBar(stdscr, title)
     title_bar.draw_title_bar()
+    new_title = header.TitleBar(stdscr, title)
+    new_title.draw_title_bar()
     pages_bar = header.PagesBar(stdscr, page_titles)
     pages_bar.draw_pages_bar(page_select)
-    
+    #sub_menu = PageSubMenu(stdscr, page_menus)
+    #sub_menu
+    #app = dvb_curse(stdscr)
+    #app.run()
+    title_bar.win.refresh()
+    pages_bar.win.refresh()
 
     while True:
 
@@ -121,9 +141,8 @@ def main(stdscr):
         #stdscr.addstr(4, 2, f"Current page: {menu_items[selected]}")
         #stdscr.addstr(6, 2, "Press 1-3 to switch pages, 'q' to quit")
         pages_bar.draw_pages_bar(page_select)
-        pages_bar.win.refresh()
-        app.draw_left_panel(page_menus[page_select], page_select)
-        stdscr.refresh()
+        #app.draw_left_panel(page_menus[page_select], page_select)
+
         
         # Handle input
         key = stdscr.getch()
