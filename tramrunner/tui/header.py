@@ -99,9 +99,8 @@ class PagesBar:
         self.win = curses.newwin(1, max_w, 1,0) # One Line Tall, Across whole Terminal, Below the Title Bar, with Text elements Conncting
         
         self.menu_items = menu_items
-        self.selected = selected
         
-    def draw_pages_bar(self):
+    def draw_pages_bar(self, selected):
         """
         
         :Output: ╰─┄ 1. scripts ┄─┄ 2. Graph View ┄─┄ 3. Tests ┄─────╯
@@ -116,13 +115,15 @@ class PagesBar:
         filler_start = "┄"
         filler_end = "╯"
 
+        # Assemble menu parts
         menu_parts = []
         for i, item in enumerate(self.menu_items):
             menu_parts.append((i, f"{i + 1}. {item}"))
         menu_text = menu_joiner.join([text for _, text in menu_parts])
         menu_content = f" {menu_text} "
 
-        filler_avail = win_max_w - len(decoration_left) - len(menu_content) - len(filler_end) - len(filler_start)-3
+        # calculate length for the right side filler
+        filler_avail = win_max_w - len(decoration_left) - len(menu_content) - len(filler_end) - len(filler_start)
         remaining = win_max_w-2 - len(decoration_left) - len(menu_text) - len(filler_start) - len(filler_end)
         
         # when no space for decorations is availabile drop it
@@ -140,12 +141,11 @@ class PagesBar:
         col += 1
         # Draw each menu item with highlighting currently selected
         for i, (idx, item_txt) in enumerate(menu_parts):
-            if idx == self.selected:
+            if idx == selected:
                 self.win.insstr(0, col, item_txt, curses.A_REVERSE)
             else:
                 self.win.addstr(0, col, item_txt)
             col += len(item_txt)
-        
             if i < len(menu_parts) - 1:
                 self.win.addstr(0, col, menu_joiner)
                 col += len(menu_joiner)
@@ -153,16 +153,7 @@ class PagesBar:
         self.win.addstr(0, col, " ")
         col += 1
         # Right Edge Decorator
-        self.win.addstr(0, col, fill)
-        
-        
-        
-        # Draw Right 
-        #if len(menu_bar_text) <= win_max_w:
-        #    self.win.insstr(0, 0, menu_bar_text[:win_max_w])
-        #else:
-        #    #Truncate if too long
-        #    self.win.insstr(0, 0, menu_bar_text[:-3] + "...")
+        self.win.insstr(0, col, fill)
         self.win.refresh()
 
 def main(stdscr):
@@ -178,17 +169,17 @@ def main(stdscr):
     stdscr.refresh()
     title_bar = TitleBar(stdscr, title)
     title_bar.draw_title_bar()
-    pages_bar = PagesBar(stdscr, menu_items, selected)
-    pages_bar.draw_pages_bar()
+    pages_bar = PagesBar(stdscr, menu_items)
+    pages_bar.draw_pages_bar(selected)
     
     
     #title_bar.win.refresh()
     while True:
 
         height, width = stdscr.getmaxyx()
-        stdscr.addstr(4, 2, f"Current page: {menu_items[selected]}")
-        stdscr.addstr(6, 2, "Press 1-3 to switch pages, 'q' to quit")
-        pages_bar.draw_pages_bar()
+        #stdscr.addstr(4, 2, f"Current page: {menu_items[selected]}")
+        #stdscr.addstr(6, 2, "Press 1-3 to switch pages, 'q' to quit")
+        pages_bar.draw_pages_bar(selected)
         pages_bar.win.refresh()
         stdscr.refresh()
         
@@ -204,10 +195,6 @@ def main(stdscr):
         elif key == ord('3'):
             selected = 2
         #title_bar.win.refresh()
-
-
-    
-
 
 if __name__  == "__main__":
     curses.wrapper(main)
