@@ -124,26 +124,15 @@ def main(stdscr):
 
     title_bar = header.TitleBar(stdscr, title)
     title_bar.draw_title_bar()
-    new_title = header.TitleBar(stdscr, title)
-    new_title.draw_title_bar()
     pages_bar = header.PagesBar(stdscr, page_titles)
     pages_bar.draw_pages_bar(page_select)
-    #sub_menu = PageSubMenu(stdscr, page_menus)
-    #sub_menu
-    #app = dvb_curse(stdscr)
-    #app.run()
-    title_bar.win.refresh()
-    pages_bar.win.refresh()
+
+
+
+   
 
     while True:
 
-        height, width = stdscr.getmaxyx()
-        #stdscr.addstr(4, 2, f"Current page: {menu_items[selected]}")
-        #stdscr.addstr(6, 2, "Press 1-3 to switch pages, 'q' to quit")
-        pages_bar.draw_pages_bar(page_select)
-        #app.draw_left_panel(page_menus[page_select], page_select)
-
-        
         # Handle input
         key = stdscr.getch()
         
@@ -161,8 +150,7 @@ def main(stdscr):
         elif key == curses.KEY_UP and menu_item_select > 0:
             menu_item_select -= 1
         elif key == curses.KEY_DOWN and menu_item_select < len(page_menus[page_select]) - 1:
-            menu_item_select += 1
-        #title_bar.win.refresh()    
+            menu_item_select += 1   
     
 
 if __name__ == "__main__":
