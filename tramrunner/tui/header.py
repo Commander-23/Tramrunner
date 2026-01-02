@@ -91,6 +91,12 @@ class TitleBar:
         self.win.insstr(0, 0, title_bar[:win_max_w], curses.A_BOLD)
         self.win.refresh()
 
+    def cleanup(self):
+        """clear & refresh the window to safely destroy it"""
+        self.win.clear()
+        self.win.refresh()
+        del self.win
+
 
 class PagesBar:
     def __init__(self, stdscr, menu_items, selected=0):
@@ -155,6 +161,12 @@ class PagesBar:
         # Right Edge Decorator
         self.win.insstr(0, col, fill)
         self.win.refresh()
+    
+    def cleanup(self):
+        """clear & refresh the window to safely destroy it"""
+        self.win.clear()
+        self.win.refresh()
+        del self.win    
 
 def main(stdscr):
     
