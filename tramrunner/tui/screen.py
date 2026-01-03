@@ -1,5 +1,6 @@
 import curses
 
+
 class dvb_curse:
     def __init__(self, stdscr):
         self.stdscr = stdscr
@@ -90,6 +91,27 @@ class dvb_curse:
             elif selection == 1:return[f"HEllO from handle_selection"]
         return []
 
+class InfoScreen:
+    def __init__(self, stdscr, page_menus):
+        self.stdscr = stdscr
+        max_h, max_w = self.stdscr.getmaxyx()
+        #Calculate the menu width again???
+        menu_width = 0
+        for item in page_menus:
+            menu_width = max(menu_width, len(max(item, key=len)))+1 # Ach keine ahnung + 3 # Same as belo, again why are we doing this again?
+        self.win = curses.newwin(max_h - 2, max_w - menu_width, 2, menu_width,)
+
+    def render_stop_info1(self, stop_info: list):
+        self.win.clear()
+        self.win.box()
+        out_line = 2
+        for entry in stop_info:
+            out_line += 1 
+
+            printer = f"[{entry.get('time_scheduled')}] [{entry.get('time_relative')}] -{entry.get('nr')}-> {entry.get('direction')}{entry.get('mot')}"
+            
+            self.win.addstr(out_line, 1, printer)
+        self.win.refresh()
 
 
 class PageSubMenu:
@@ -99,7 +121,7 @@ class PageSubMenu:
         menu_width = 0
         # calculate menu width
         for item in page_menus:
-            menu_width = max(menu_width, len(max(item, key=len)))+1
+            menu_width = max(menu_width, len(max(item, key=len))) + 1 # Off by one + 2 offset down below menu spacing
         self.win = curses.newwin(max_h - 2, menu_width, 2, 0,) # One Line Tall, minimum menu width to accomedate all items without overflow, Top of page
         self.page_menus = page_menus
 

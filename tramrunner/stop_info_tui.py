@@ -16,6 +16,7 @@ def stop_info_tui(userinput:str=None):
     expiration_time = utils.vvo_timestamp_to_datetime_class(departure_monitor_response['ExpirationTime'])
     expiration_time_human = expiration_time.strftime("%H:%M:%S")
 
+    return_lines = []
     output_lines = [
         f"Abfahrten für '{station_name}':",
         f"{'nr':<5}{'Direction':<25}{'Time':<6}{'Diff'}",
@@ -49,9 +50,18 @@ def stop_info_tui(userinput:str=None):
         if departure.get('State') == 'Delayed':
             delay_display = "DLY"
         else: delay_display = ""
+        return_lines.append(
+            {
+                "time_scheduled":arrival_scheduled_time,
+                "time_relative":arrival_in,
+                "nr":line_number,
+                "direction":line_direction,
+                "mot":"Tram"
 
+            }
+        )
         output_lines.append(f"{line_number:<5}{line_direction:<25}{arrival_display:<7}{delay_display:<5}")
-    return output_lines#"\n".join(output_lines)
+    return return_lines#"\n".join(output_lines)
     #except Exception as e:
     #    print("\aAn Error Occured")
     #    print(e)
