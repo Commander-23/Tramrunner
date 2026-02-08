@@ -54,7 +54,48 @@ class MenuWindow:
         self.win.addstr(0, title_x, title_text, curses.A_BOLD)
 
         self.win.refresh()
+
+
+class Header:
+    def __init__(self, stdscr, title, menu_items):
+        self.stdscr = stdscr
+        max_h, max_w = self.stdscr.getmaxyx()
+
+        self.title_win = curses.newwin(1, max_w, 0,0) # One Line Tall, Across whole Terminal, Top-left of page
+        self.p_bar_win = curses.newwin(1, max_w, 1,0) # One Line Tall, Across whole Terminal, Below the Title Bar, with Text elements Conncting
         
+        self.title = title
+        self.menu_items = menu_items
+
+        self.draw_title_bar()
+    
+    def draw_title_bar(self):
+        """draw the title bar at the top of the window"""
+        self.title_win.clear() # Clear any Previous Content
+
+        # Setting up Variables
+        win_max_h, win_max_w = self.title_win.getmaxyx()
+        title_text = f"┨ {self.title} ┠"
+        decoration_left = "╭────"
+        decoration_right = "────╮"
+        filler = "─"
+
+        # Calculate spacing
+        total_decoration = len(decoration_left) + len(decoration_right) + len(title_text)
+        remaining = win_max_w - total_decoration
+
+        if remaining > 0:
+            # Center the title
+            filler_left = filler * (remaining // 2)
+            filler_right = filler * (remaining - remaining // 2)
+            title_bar = f"{decoration_left}{filler_left}{title_text}{filler_right}{decoration_right}"
+        else:
+            # Fallback if window is too narrow
+            title_bar = f"{self.title[:win_max_w]}"#{decoration_left}{title_text}{filler_right}"
+        
+        # insstr because add string has trouble inserting at bottom right corner of display
+        self.title_win.insstr(0, 0, title_bar[:win_max_w], curses.A_BOLD)
+        self.title_win.refresh()
 
 class TitleBar:
     def __init__(self, stdscr, title):
