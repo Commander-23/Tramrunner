@@ -1,0 +1,8 @@
+.testies {
+    background: darkred;
+}
+
+#info-text {
+    color: red;
+    height: 2;
+}
