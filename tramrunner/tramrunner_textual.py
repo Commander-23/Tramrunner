@@ -131,7 +131,7 @@ class Tramrunner(App):
 
         for departure in stop_info_data['Departures']:
 
-            new_tram = StopInfoSingleTram(classes="single_departure, alternate")
+            new_tram = StopInfoSingleTram(classes="single_departure")
             scroller.mount(new_tram)
             scroller.scroll_visible()
             new_tram.fill_tram_info(departure)
