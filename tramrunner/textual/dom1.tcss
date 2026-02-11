@@ -2,6 +2,29 @@
     background: darkred;
 }
 
+.header {
+    background: $primary-background;
+}
+
+.tram_label {
+ background: $secondary-background-darken-1;
+}
+.single_departure {
+    background: $primary-background;
+}
+
+.single_departure #alternate {
+    background: $primary-background-darken-1;
+}
+
+
+#departure_line_number {
+    background: darkblue;
+    width: 9;
+    align: right middle;
+}
+
+
 #info-text {
     color: red;
     height: 2;
