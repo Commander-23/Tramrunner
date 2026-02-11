@@ -8,8 +8,11 @@ import api, utils
 import time
 # from stop_info_tui import stop_info_tui
 
-class StopInfoHeader(HorizontalGroup):
+class StopInfoHeader(VerticalGroup):
     def compose(self) -> ComposeResult:
+        with HorizontalGroup():
+                yield Input(placeholder="halte", classes="header", id="stop_info_text_input")
+                yield Button("Clear", classes="clear_buttons", id="stop_info_clear")
         yield VerticalGroup(
             Label("_stop_name_", classes="header", id="stop-name"),
             Label("_stop_place_", classes="header", id="stop-place")
@@ -81,9 +84,18 @@ class SingleTram(HorizontalGroup):
             yield Static("Testies", classes="testies")
 
 
-class QueryTripHeader(HorizontalGroup):
+class QueryTripHeader(VerticalGroup):
     def compose(self) -> ComposeResult:
-            yield Label("HI")
+            with HorizontalGroup():
+                yield Input(placeholder="start", classes="header", id="trip_userin_start")
+                yield Input(placeholder="stop", classes="header", id="trip_userin_stop")
+            with HorizontalGroup():
+                yield Button("Submit", id="trip_submit")
+                yield Button("Clear", id="trip_clear")
+                with VerticalGroup():
+                    yield Static("label")
+                    yield Static("label")
+                    yield Static("label")
             
 
 class Tramrunner(App):
@@ -95,7 +107,6 @@ class Tramrunner(App):
         yield Footer()
         with TabbedContent():
             with TabPane("stop-info", id="pane_stop_info"):
-                yield Input(placeholder="start", classes="header", id="stop_info_text_input")
                 yield StopInfoHeader()
                 yield VerticalScroll(id="stop_info_scroller")
             with TabPane("Trip", id="trip-page"):

@@ -29,3 +29,6 @@
     color: red;
     height: 2;
 }
+Input {
+    width: 2fr
+}
