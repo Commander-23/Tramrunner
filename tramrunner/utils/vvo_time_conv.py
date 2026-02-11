@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta, timezone
 import re
-def vvo_timestamp_to_datetime_class(dvb_time_noformat: str) -> datetime:
+def vvo_time_conv(dvb_time_noformat: str) -> datetime:
     """
         sign = 1 if tz_str[0] == "+" else -1
         tz_hours = int(tz[1:3])
@@ -32,7 +32,7 @@ def vvo_timestamp_to_datetime_class(dvb_time_noformat: str) -> datetime:
     return timestamp 
 
 if __name__ == "__main__":
-    func_out = vvo_timestamp_to_datetime_class("/Date(1767662520000+0100)/")
+    func_out = vvo_time_conv("/Date(1767662520000+0100)/")
     print(f"converted timestamp:        {func_out[0]}")
     print(f"time diff to current time:  {func_out[1]}")
     print(f"current Time:               {datetime.now()}")

@@ -13,7 +13,7 @@ def stop_info_tui(userinput:str=None):
     departure_monitor_response = api.vvo_departure_monitor(stopid, limit=20, mot=mode_of_transport)
     station_name = departure_monitor_response['Name']
     station_city = departure_monitor_response['Place']
-    expiration_time = utils.vvo_timestamp_to_datetime_class(departure_monitor_response['ExpirationTime'])
+    expiration_time = utils.vvo_time_conv(departure_monitor_response['ExpirationTime'])
     expiration_time_human = expiration_time.strftime("%H:%M:%S")
 
     return_lines = []
@@ -26,12 +26,12 @@ def stop_info_tui(userinput:str=None):
         line_number = departure.get('LineName')
         line_direction = departure.get('Direction')[:24]
 
-        arrival_scheduled_time = utils.vvo_timestamp_to_datetime_class(departure.get('ScheduledTime')).astimezone().strftime("%H:%M")
+        arrival_scheduled_time = utils.vvo_time_conv(departure.get('ScheduledTime')).astimezone().strftime("%H:%M")
         
         arrival_display = arrival_scheduled_time
 
         if departure.get('RealTime'):
-            arrival_real_time = utils.vvo_timestamp_to_datetime_class(departure.get('RealTime'))
+            arrival_real_time = utils.vvo_time_conv(departure.get('RealTime'))
             time_now = datetime.now(arrival_real_time.tzinfo) if arrival_real_time.tzinfo else datetime.now()
             arrival_real_diff = arrival_real_time - time_now
 

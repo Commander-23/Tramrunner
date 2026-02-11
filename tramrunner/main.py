@@ -36,8 +36,8 @@ def line_info_tui(start, destination):
     print("\nZschernitz --> Bühlau")
     for stop in regular_stops:
         print(f"{stop['Name']}")
-        print(f"    Departure Time: {vvo_timestamp_to_datetime_class(stop['DepartureTime'])[0]}\n")# + TimeZone}")
-        print(f"    Arrival Time: {vvo_timestamp_to_datetime_class(stop['ArrivalTime'])[0]}\n")# + TimeZone}\n")
+        print(f"    Departure Time: {vvo_time_conv(stop['DepartureTime'])[0]}\n")# + TimeZone}")
+        print(f"    Arrival Time: {vvo_time_conv(stop['ArrivalTime'])[0]}\n")# + TimeZone}\n")
         #print("")
 
     #write_to_json(query_trip, path_query_trip)

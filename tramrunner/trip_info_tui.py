@@ -31,7 +31,7 @@ def trip_info_tui(query_trip_data):
                 is_last = i == len(stops) - 1
                 connector = "└─" if is_last else "├─"
                 try:
-                    time = utils.vvo_timestamp_to_datetime_class(stop["DepartureTime"]).astimezone().strftime('%H:%M')
+                    time = utils.vvo_time_conv(stop["DepartureTime"]).astimezone().strftime('%H:%M')
                     name = stop["Name"]
                     stop_place = stop.get("Place", "???")
                     platform = stop.get("Platform", {}).get("Name", "?")
