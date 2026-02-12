@@ -4,19 +4,27 @@
 
 .header {
     background: $primary-background;
+    Static {
+        margin: 0 1;
+    }
 }
 
-.tram_label {
- background: $secondary-background-darken-1;
-}
 .single_departure {
     background: $primary-background;
 }
 
-.single_departure #alternate {
-    background: $primary-background-darken-1;
+.StopInfoHeader {
+    background: $primary-background-darken-3;
 }
 
+#stop-name {
+    background: red;
+    padding: 0 2;
+}
+
+#stop_info_header Static {
+    width: auto
+}
 
 #departure_line_number {
     background: darkblue;
@@ -31,4 +39,16 @@
 }
 Input {
     width: 2fr
+}
+    
+#label3 {
+    background: $panel;
+}
+
+#label11 {
+    background: $panel;
+}
+
+#stop_place {
+    align: right middle;
 }
