@@ -41,3 +41,5 @@ pip install -r requirements.txt
 ```
 python trammruner/main.py
 ```
+
+![screenshot 1](https://raw.githubusercontent.com/Commander-23/Tramrunner/refs/heads/master/documentation/screenshot-1.svg)
