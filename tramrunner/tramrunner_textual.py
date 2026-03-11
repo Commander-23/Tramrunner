@@ -4,6 +4,7 @@ from textual.app import App, ComposeResult
 from textual.containers import Container, Horizontal, HorizontalGroup, Vertical, VerticalGroup, VerticalScroll
 from textual.widgets import Static, Header, Footer, Label, Button, RichLog, Input, TabbedContent, TabPane, Pretty, DataTable, Digits, Collapsible, Rule
 
+from datetime import datetime
 import api, utils
 import time
 # from stop_info_tui import stop_info_tui
@@ -12,7 +13,6 @@ class StopInfoHeader(VerticalGroup):
     def compose(self) -> ComposeResult:
         #with HorizontalGroup():
         yield Input(placeholder="halte", classes="header", id="stop_info_text_input")
-        #yield Button("Clear", classes="clear_buttons", id="stop_info_clear")
         with HorizontalGroup():
             yield Static("_stop_name_", classes="header", id="stop_name")
             yield Static("_stop_place_", classes="header", id="stop_place")
@@ -65,16 +65,17 @@ class StopInfoSingleTram(HorizontalGroup):
     def compose(self) -> ComposeResult:
         yield Digits("", id="departure_line_number")
         with VerticalGroup():
-            yield Static("", id="label1", classes="tram_info_1")
-            yield Static("label", id="label2", classes="tram_info_1")
-            yield Static("label", id="label3", classes="tram_info_1")
-        with VerticalGroup():
-            yield Static("", id="departure_time", classes="tram_info_2")
-            yield Static("", id="departure_real_time", classes="tram_info_2")
-            yield Static("", id="label11", classes="tram_info_2")
-        with VerticalGroup():
             yield Static("", id="mot_type", classes="tram_info_1")
             yield Static("", id="direction_name", classes="tram_info_1")
+            yield Static("", id="label4", classes="tram_info_1")
+        with VerticalGroup():
+            yield Static("", id="departure_time", classes="tram_info_2")
+            yield Static("", id="departure_time_diff", classes="tram_info_2")
+            yield Static("", id="label3", classes="tram_info_1")
+        with VerticalGroup():
+            yield Static("", id="departure_real_time", classes="tram_info_2")
+            yield Static("", id="label1", classes="tram_info_1")
+            yield Static("", id="label2", classes="tram_info_1")
 
 
     
@@ -83,9 +84,34 @@ class StopInfoSingleTram(HorizontalGroup):
         # Time Stuff
         depa_realtime = departure_data.get('RealTime')
         depa_time = departure_data.get('ScheduledTime')
-        if depa_realtime: real_time = utils.vvo_time_conv(depa_realtime).strftime("%H:%M")
-        else: real_time = f"--:--"
-        line_time = utils.vvo_time_conv(depa_time).strftime("%H:%M")
+        if depa_realtime:
+            real_time = utils.vvo_time_conv(depa_realtime)
+            time_now = datetime.now(real_time.tzinfo) if real_time.tzinfo else datetime.now()
+            arrival_real_diff = real_time - time_now
+
+            real_time_disp = real_time.astimezone().strftime("%H:%M")
+
+            arrival_seconds = int(arrival_real_diff.total_seconds())
+            if arrival_seconds <= 0:
+                arrival_in = f"{arrival_seconds} sec"
+            elif arrival_seconds < 60:
+                arrival_in = f"{arrival_seconds} sec"
+            else:
+                arrival_minutes = arrival_seconds // 60
+                arrival_in = f"{arrival_minutes} min"
+
+            arrival_disp = f"{arrival_in}"
+        else:
+            real_time_disp = f"--:--"
+            arrival_real_diff = f"--:--"
+            arrival_disp = f"--:--"
+            arrival_seconds = f"--:--"
+
+
+
+
+
+        line_time = utils.vvo_time_conv(depa_time).astimezone().strftime("%H:%M")
         depa_state = departure_data.get('State')
         # ID Stuff
         depa_id = departure_data.get('Id')    
@@ -107,14 +133,17 @@ class StopInfoSingleTram(HorizontalGroup):
         line_digits = "".join([char for char in line_name if char.isdigit()])
         line_char = "".join([char for char in line_name if char.isalpha()])
 
-        #self.query_one("#label1", Static).update(f"{"".join(line_digits)}")
-        self.query_one("#label2", Static).update(f"{"".join(line_char)}")
-        self.query_one("#label3", Static).update(line_direction)
         self.query_one("#departure_line_number", Digits).update(line_digits)
-        self.query_one("#direction_name", Static).update(line_direction)
         self.query_one("#mot_type", Static).update(depa_mot)
-        self.query_one("#departure_time", Static).update(f"{real_time} live")
-        self.query_one("#departure_real_time", Static).update(f"{line_time}")
+        self.query_one("#direction_name", Static).update(line_direction)
+
+        self.query_one("#departure_time"     , Static).update(f"sched: {line_time}")
+        self.query_one("#departure_real_time", Static).update(f"dp-RT: {real_time_disp}")
+        self.query_one("#departure_time_diff", Static).update(f"Tdiff: {arrival_disp}")
+
+        #self.query_one("#label1", Static).update(f"real_diff: {arrival_real_diff}")
+        #self.query_one("#label2", Static).update(f"arri_secs: {arrival_seconds}")
+        #self.query_one("#label3", Static).update()
         
 class SingleTrip(HorizontalGroup):
     def compose(self) -> ComposeResult:

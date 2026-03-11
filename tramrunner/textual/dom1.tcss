@@ -40,10 +40,12 @@
 Input {
     width: 2fr
 }
-    
-#label3 {
-    background: $panel;
-}
+ 
+/* Stuff to seperate rows for tram disp */
+
+#label4 {background: $panel;}
+#label3 {background: $panel;}
+#label2 {background: $panel;}
 
 #label11 {
     background: $panel;
