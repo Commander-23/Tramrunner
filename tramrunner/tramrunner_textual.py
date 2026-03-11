@@ -138,10 +138,10 @@ class StopInfoSingleTram(HorizontalGroup):
         self.query_one("#direction_name", Static).update(line_direction)
 
         self.query_one("#departure_time"     , Static).update(f"sched: {line_time}")
-        self.query_one("#departure_real_time", Static).update(f"dp-RT: {real_time_disp}")
-        self.query_one("#departure_time_diff", Static).update(f"Tdiff: {arrival_disp}")
+        self.query_one("#departure_real_time", Static).update(f"live: {real_time_disp}")
+        self.query_one("#departure_time_diff", Static).update(f"DTN: {arrival_disp}")
 
-        #self.query_one("#label1", Static).update(f"real_diff: {arrival_real_diff}")
+        self.query_one("#label1", Static).update(f"state: {depa_state}")
         #self.query_one("#label2", Static).update(f"arri_secs: {arrival_seconds}")
         #self.query_one("#label3", Static).update()
         
