@@ -33,6 +33,6 @@ def vvo_time_conv(dvb_time_noformat: str) -> datetime:
 
 if __name__ == "__main__":
     func_out = vvo_time_conv("/Date(1767662520000+0100)/")
-    print(f"converted timestamp:        {func_out[0]}")
-    print(f"time diff to current time:  {func_out[1]}")
+    print(f"converted timestamp:        {func_out}")
+    print(f"time diff to current time:  {func_out}")
     print(f"current Time:               {datetime.now()}")

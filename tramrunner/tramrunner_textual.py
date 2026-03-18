@@ -2,7 +2,7 @@ from textual import events, on
 
 from textual.app import App, ComposeResult
 from textual.containers import Container, Horizontal, HorizontalGroup, Vertical, VerticalGroup, VerticalScroll
-from textual.widgets import Static, Header, Footer, Label, Button, RichLog, Input, TabbedContent, TabPane, Pretty, DataTable, Digits, Collapsible, Rule
+from textual.widgets import Static, Header, Footer, Label, Button, RichLog, Input, TabbedContent, TabPane, Pretty, DataTable, Digits, Collapsible, Rule, Placeholder, ListView, DataTable
 
 from datetime import datetime
 import api, utils
@@ -60,24 +60,38 @@ class StopInfoHeader(VerticalGroup):
             testies = widget
             widget.remove()
 
+class StopInfoSingleTram(VerticalGroup):
 
-class StopInfoSingleTram(HorizontalGroup):
+    
     def compose(self) -> ComposeResult:
-        yield Digits("", id="departure_line_number")
-        with VerticalGroup():
-            yield Static("", id="mot_type", classes="tram_info_1")
-            yield Static("", id="direction_name", classes="tram_info_1")
-            yield Static("", id="label4", classes="tram_info_1")
-        with VerticalGroup():
-            yield Static("", id="departure_time", classes="tram_info_2")
-            yield Static("", id="departure_time_diff", classes="tram_info_2")
-            yield Static("", id="label3", classes="tram_info_1")
-        with VerticalGroup():
-            yield Static("", id="departure_real_time", classes="tram_info_2")
-            yield Static("", id="label1", classes="tram_info_1")
-            yield Static("", id="label2", classes="tram_info_1")
+        with HorizontalGroup():
+            yield Digits("", id="departure_line_number")
+            with VerticalGroup():
+                yield Static("", id="mot_type", classes="tram_info_1")
+                yield Static("", id="direction_name", classes="tram_info_1")
+                yield Static("", id="label4", classes="tram_info_1")
+            with VerticalGroup():
+                yield Static("", id="departure_time", classes="tram_info_2")
+                yield Static("", id="departure_time_diff", classes="tram_info_2")
+                yield Static("", id="label3", classes="tram_info_1")
+            with VerticalGroup():
+                yield Static("", id="departure_real_time", classes="tram_info_2")
+                yield Static("", id="label1", classes="tram_info_1")
+                yield Static("", id="label2", classes="tram_info_1")
+        with Collapsible(title="next depa's"):
+            yield DataTable()
 
 
+    def on_mount(self) -> None:
+        testies_data_arr = [
+            ("LineName","type","dir","scheduled","DTN","Live","depaState"),
+            ("LineName","type","dir","scheduled","DTN","Live","depaState"),
+            ("LineName","type","dir","scheduled","DTN","Live","depaState")
+        ]
+        compact_header = ("LineName","type","dir","scheduled","DTN","Live","depaState")
+        table = self.query_one(DataTable)
+        table.add_columns(*compact_header[0])
+        table.add_rows(testies_data_arr[1:])
     
     def fill_tram_info(self, departure_data):
         
@@ -144,6 +158,12 @@ class StopInfoSingleTram(HorizontalGroup):
         self.query_one("#label1", Static).update(f"state: {depa_state}")
         #self.query_one("#label2", Static).update(f"arri_secs: {arrival_seconds}")
         #self.query_one("#label3", Static).update()
+        
+        datatable = self.query_one(DataTable)
+        #data_content = line_digits, depa_mot, line_direction
+        #testies_dat = ["1", "zschertnitz"]
+        #datatable.add_row(line_digits, depa_mot, line_direction)
+
         
 class SingleTrip(HorizontalGroup):
     def compose(self) -> ComposeResult:
