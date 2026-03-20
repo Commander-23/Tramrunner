@@ -1,12 +1,33 @@
+TabbedContent {
+    #--content-tab-stop-info {
+        color: cyan;
+    }
+    
+    #--content-tab-trip-search {
+        color: cyan;
+    }
+
+    #--content-tab-logger {
+        color: $primary;
+    }
+}
+
+
 .testies {
     background: darkred;
 }
 
 .header {
-    background: $primary-background;
-    Static {
-        margin: 0 1;
+    /*background: $primary-background;
+    */
+    &.left {
+        background: red;
     }
+    &.right {
+        align: right middle;
+        background: green;
+    }
+
 }
 
 .single_departure {

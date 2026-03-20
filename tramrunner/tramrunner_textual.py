@@ -11,30 +11,33 @@ import time
 
 class StopInfoHeader(VerticalGroup):
     def compose(self) -> ComposeResult:
-        #with HorizontalGroup():
-        yield Input(placeholder="halte", classes="header", id="stop_info_text_input")
         with HorizontalGroup():
-            yield Static("_stop_name_", classes="header", id="stop_name")
-            yield Static("_stop_place_", classes="header", id="stop_place")
+            yield Input(placeholder="halte", classes="header", id="stop_info_text_input")
+            yield Button("", classes="header", id="stop-info-refresh")
+            yield Button("", classes="header", id="stop-info-clear")
+        with HorizontalGroup():
+            yield Label("_stop_place_", classes="header left", id="stop_place")
+            yield Label("stop_id:", classes="header right", id="expiry1")
         with  HorizontalGroup():
-            yield Static("stop_id:", classes="header", id="expiry1")
-            yield Static("__:__:__", classes="header", id="expiry2")
+            yield Label("_stop_name_", classes="header left", id="stop_name")
+            yield Label("__:__:__", classes="header right", id="expiry2")
 
 
     @on(Input.Submitted, "#stop_info_text_input")
+    @on(Button.Pressed, "#stop-info-refresh")
     def accept_input_vaue(self):
         self.clear_stop_info()
 
         # Get the stopid and with it retrive stop information
         stop_info_text_input = self.query_one("#stop_info_text_input", Input)
         stopid = utils.get_stop_id_from_pointfinder(stop_info_text_input.value)
-        stop_info_data = api.vvo_departure_monitor(stopid, limit=30)
-        
+        stop_info_data = api.vvo_departure_monitor(stopid, limit=5)
+
         # Write Data to the header labels
-        stop_name = self.query_one("#stop_name", Static)
-        stop_place = self.query_one("#stop_place", Static)
-        stop_expiry1 = self.query_one("#expiry1", Static)
-        stop_expiry2 = self.query_one("#expiry2", Static)
+        stop_name = self.query_one("#stop_name", Label)
+        stop_place = self.query_one("#stop_place", Label)
+        stop_expiry1 = self.query_one("#expiry1", Label)
+        stop_expiry2 = self.query_one("#expiry2", Label)
         stop_name.content = stop_info_data['Name']
         stop_place.content = stop_info_data['Place']
         stop_expiry1.content = stopid
@@ -61,8 +64,6 @@ class StopInfoHeader(VerticalGroup):
             widget.remove()
 
 class StopInfoSingleTram(VerticalGroup):
-
-    
     def compose(self) -> ComposeResult:
         with HorizontalGroup():
             yield Digits("", id="departure_line_number")
@@ -81,20 +82,17 @@ class StopInfoSingleTram(VerticalGroup):
         with Collapsible(title="next depa's"):
             yield DataTable()
 
-
+    testies_data_arr = []
     def on_mount(self) -> None:
-        testies_data_arr = [
-            ("LineName","type","dir","scheduled","DTN","Live","depaState"),
-            ("LineName","type","dir","scheduled","DTN","Live","depaState"),
-            ("LineName","type","dir","scheduled","DTN","Live","depaState")
-        ]
-        compact_header = ("LineName","type","dir","scheduled","DTN","Live","depaState")
+        compact_header = ("nr", "dir", "scheduled","DTN","Live","depaState")
         table = self.query_one(DataTable)
-        table.add_columns(*compact_header[0])
-        table.add_rows(testies_data_arr[1:])
-    
+        table.add_columns(*compact_header)
+        table.add_rows(self.testies_data_arr[0:])
+
+    def add_row_to_table(self,):
+        pass
+
     def fill_tram_info(self, departure_data):
-        
         # Time Stuff
         depa_realtime = departure_data.get('RealTime')
         depa_time = departure_data.get('ScheduledTime')
@@ -121,10 +119,6 @@ class StopInfoSingleTram(VerticalGroup):
             arrival_disp = f"--:--"
             arrival_seconds = f"--:--"
 
-
-
-
-
         line_time = utils.vvo_time_conv(depa_time).astimezone().strftime("%H:%M")
         depa_state = departure_data.get('State')
         # ID Stuff
@@ -142,7 +136,7 @@ class StopInfoSingleTram(VerticalGroup):
         line_name = departure_data.get('LineName')
         line_direction = departure_data.get('Direction')
         depa_platform = departure_data.get('Platform')
-        
+
         # seperating line_name into digits and charachters
         line_digits = "".join([char for char in line_name if char.isdigit()])
         line_char = "".join([char for char in line_name if char.isalpha()])
@@ -158,21 +152,21 @@ class StopInfoSingleTram(VerticalGroup):
         self.query_one("#label1", Static).update(f"state: {depa_state}")
         #self.query_one("#label2", Static).update(f"arri_secs: {arrival_seconds}")
         #self.query_one("#label3", Static).update()
-        
+
         datatable = self.query_one(DataTable)
+        self.testies_data_arr.append((line_digits, line_direction, line_time, arrival_disp, real_time_disp, depa_state))
         #data_content = line_digits, depa_mot, line_direction
         #testies_dat = ["1", "zschertnitz"]
         #datatable.add_row(line_digits, depa_mot, line_direction)
 
-        
+
 class SingleTrip(HorizontalGroup):
     def compose(self) -> ComposeResult:
         with Collapsible():
             yield Label("", id="stop-name123123", classes="testies")
             yield Label("", id="stop-place123123", classes="testies")
             yield Static("Testies", classes="testies")
-    
-    
+
     def fill_trip_info(self, trip_data):
         logger = self.query_one("#log_content")
 
@@ -190,36 +184,34 @@ class QueryTripHeader(VerticalGroup):
                     yield Static("label")
                     yield Static("label")
                     yield Static("label")
-            
+
 
 class Tramrunner(App):
     """We gonn make it"""
     CSS_PATH = "textual/dom1.tcss"
-    
+
     def compose(self) -> ComposeResult:
         yield Header()
         yield Footer()
         with TabbedContent():
-            with TabPane("stop-info", id="pane_stop_info"):
+            with TabPane("stop-info", id="stop-info"):
                 yield StopInfoHeader(id="stop_info_header")
                 yield VerticalScroll(id="stop_info_scroller", classes="scroll_content")
-            with TabPane("Trip", id="trip-page"):
+            with TabPane("trip-search", id="trip-search"):
                 yield QueryTripHeader()
                 yield VerticalScroll(SingleTrip(), id="trip_info_scroller", classes="scroll_content")
                 #yield VerticalScroll(RichLog, id="richlog")
-            with TabPane("Log", id="pane_logger"):
+            with TabPane("Log", id="logger"):
                 with Vertical():
                     yield Button("Clear", id="log_clear_button")
                     yield RichLog(id="log_content")
 
-        
-
-    
     @on(Button.Pressed, "#log_clear_button")
     def clear_log_page(self):
         logger = self.query_one("#log_content")
         logger.clear()
-    
+
+
 if __name__ == "__main__":
     app = Tramrunner()
     app.run()
