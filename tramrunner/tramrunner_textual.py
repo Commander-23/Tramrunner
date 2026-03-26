@@ -28,12 +28,15 @@ class StopInfoHeader(VerticalGroup):
     def accept_input_vaue(self):
         self.clear_stop_info()
 
-        # Get the stopid and with it retrive stop information
+        # get stopid, verify, and submit for datarequst
         stop_info_text_input = self.query_one("#stop_info_text_input", Input)
         stopid = utils.get_stop_id_from_pointfinder(stop_info_text_input.value)
-        stop_info_data = api.vvo_departure_monitor(stopid, limit=5)
-
+        stop_info_data = api.vvo_departure_monitor(stopid, limit=30)
         # Write Data to the header labels
+        # hedaer Utils, fill header information
+        #
+        # def fill_header_info(self, stop_info_data) -> None:
+
         stop_name = self.query_one("#stop_name", Label)
         stop_place = self.query_one("#stop_place", Label)
         stop_expiry1 = self.query_one("#expiry1", Label)
@@ -44,13 +47,24 @@ class StopInfoHeader(VerticalGroup):
         stop_expiry2.content = utils.vvo_time_conv(stop_info_data['ExpirationTime']).strftime("%H:%M:%S")
 
         # create widgets for departures
-        scroller = self.app.query_one("#stop_info_scroller")
+        displayed_lines = []
+        scroller = self.app.query_one("#stop_info_scroller")          # select mount point for widget's created after
         for departure in stop_info_data['Departures']:
-            new_tram = StopInfoSingleTram(classes="single_departure")
-            scroller.mount(new_tram)
-            scroller.scroll_visible()
-            new_tram.fill_tram_info(departure)
-        
+            new_stop_line_nr = departure.get('LineName')
+            
+            if new_stop_line_nr not in displayed_lines:
+                new_tram = StopInfoSingleTram(id=f"depa-{departure.get('LineName')}-{departure.get('Direction')[:3]}",classes="single_departure")
+                displayed_lines.append(new_stop_line_nr)
+                scroller.scroll_visible()
+                scroller.mount(new_tram)
+                new_tram.fill_tram_info(departure)
+                new_tram.fill_data_table(str(new_stop_line_nr))
+        #tramwidget = scroller.query_one("depa-41-Zschertnitz")
+        scroller_child = scroller.children
+        for cwid in scroller_child:
+            logger.write(cwid._id)
+        #logger.write(tramwidget.id)
+        # Logging stuff
         logger = self.app.query_one("#log_content", RichLog)
         logger.write(stop_info_data)
 
@@ -60,7 +74,6 @@ class StopInfoHeader(VerticalGroup):
         scroller = self.app.query_one("#stop_info_scroller", VerticalScroll)
         widgets = scroller.children
         for widget in widgets:
-            testies = widget
             widget.remove()
 
 class StopInfoSingleTram(VerticalGroup):
@@ -80,7 +93,7 @@ class StopInfoSingleTram(VerticalGroup):
                 yield Static("", id="label1", classes="tram_info_1")
                 yield Static("", id="label2", classes="tram_info_1")
         with Collapsible(title="next depa's"):
-            yield DataTable()
+            yield DataTable(zebra_stripes=True)
 
     testies_data_arr = []
     def on_mount(self) -> None:
@@ -152,13 +165,22 @@ class StopInfoSingleTram(VerticalGroup):
         self.query_one("#label1", Static).update(f"state: {depa_state}")
         #self.query_one("#label2", Static).update(f"arri_secs: {arrival_seconds}")
         #self.query_one("#label3", Static).update()
-
-        datatable = self.query_one(DataTable)
-        self.testies_data_arr.append((line_digits, line_direction, line_time, arrival_disp, real_time_disp, depa_state))
+        
+        #self.fill_data_table(line_digits, line_direction, line_time, arrival_disp, real_time_disp, depa_state)
         #data_content = line_digits, depa_mot, line_direction
         #testies_dat = ["1", "zschertnitz"]
         #datatable.add_row(line_digits, depa_mot, line_direction)
 
+    def fill_data_table(self, line_nr):#, line_dir_, time_scheduled, time_to_now, time_live_, depa_state):
+
+        self.testies_data_arr.append((line_nr))#, line_dir_, time_scheduled, time_to_now, time_live_, depa_state))
+        all_stops = self.query_children("#stop_info_scroller")
+        #all_stops.query
+        
+        
+        node1 = all_stops._nodes
+        
+        testies = "arsch"
 
 class SingleTrip(HorizontalGroup):
     def compose(self) -> ComposeResult:
