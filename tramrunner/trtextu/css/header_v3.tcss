@@ -61,3 +61,72 @@ Screen {
         }
     }
 }
+
+SiConfig {
+    align: center middle;
+    VerticalScroll {
+        border: panel $accent;
+        width: auto;
+        height: auto;
+        max-width: 90%;
+        max-height: 90%;
+
+    }
+}
+
+#config-modal > Container {
+    /*border: tab red;
+    &.buttonalign {
+    }*/
+}
+
+#config-buttons-wq {
+    layout: grid;
+    grid-size: 5;
+    grid-rows:3;
+    grid-columns: 1fr;
+    height: auto;
+    margin: 0 0;
+    Button {
+        margin: 0 0;
+    }
+}
+
+#conf-stop-finder {
+    layout: grid;
+    grid-size: 2 2;
+    grid-columns: 75% 25%;
+    height:auto;
+    margin: 1 0;
+    Container {
+        layout: grid;
+    }
+
+    .label {
+        height: 3;
+    }
+}
+
+#conf-stop-finder-switches {
+    grid-size: 2 3;
+    grid-columns: auto;
+    height:auto;
+    margin: 0 0;
+    max-width: 100;
+    Switch {
+        width: auto;
+        height: auto;
+    }
+}
+#conf-stop-finder-limit {
+    layout: grid;
+    grid-size: 1 3;
+    grid-columns: 1fr;
+    height:auto;
+    margin: 0 0;
+}
+
+#content-v2 {
+    layout: grid;
+    grid-size: 2 1;
+}

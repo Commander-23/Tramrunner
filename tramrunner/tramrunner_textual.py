@@ -210,7 +210,7 @@ class QueryTripHeader(VerticalGroup):
 
 class Tramrunner(App):
     """We gonn make it"""
-    CSS_PATH = "textual/dom1.tcss"
+    CSS_PATH = "trtextu/css/dom1.tcss"
 
     def compose(self) -> ComposeResult:
         yield Header()
