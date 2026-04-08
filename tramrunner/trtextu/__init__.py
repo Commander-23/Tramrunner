@@ -1,2 +1,1 @@
-from .stopinfo_v2 import StopInfo
-#from .testies import Testies
+from .stopinfo_v3 import StopInfo
