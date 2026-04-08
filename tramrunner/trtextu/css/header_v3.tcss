@@ -9,3 +9,55 @@ Screen {
     grid-columns: 2fr 1fr;
     grid-gutter: 1;
 }
+
+#header-v3 {
+    layout: grid;
+    grid-size: 8;
+    grid-columns: 1fr 2fr 1 2fr 8 9 9 9;
+    grid-rows: auto 2;
+    grid-gutter: 0;
+
+    Input {
+        column-span: 5;
+        row-span: 1;
+        &.-valid:focus {
+            border: tall $success;
+        }
+        &.-valid {
+            border: tall $success 60%;
+        }
+    }
+
+    Button {
+        /* ID's matched #button-refresh, #button-clear, #button-3 */
+        row-span: 2;
+        padding: 0 0;
+        margin: 0 1;
+    }
+    Static {
+        background: $primary-background-darken-1;
+        &.err {
+            content-align: left middle;
+            padding: 0 1;
+            background: $primary-background-darken-2;
+        }
+        &.place {
+            content-align: right middle;
+            padding: 0 1;
+        }
+        &.icon {
+            content-align: center middle;
+            margin: 0 0;
+            color: $accent
+        }
+        &.name {
+            content-align: left middle;
+            padding: 0 1;
+        }
+        &.time {
+            content-align: right middle;
+            padding: 0 1;
+            background: $primary-background-darken-2;
+        }
+    }
+}
