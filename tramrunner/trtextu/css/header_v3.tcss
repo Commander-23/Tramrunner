@@ -1,0 +1,11 @@
+Screen {
+    align: center middle;
+}
+
+#stop-info-container {
+    layout: grid;
+    grid-size: 1 2;
+    grid-rows: auto 1fr;
+    grid-columns: 2fr 1fr;
+    grid-gutter: 1;
+}
