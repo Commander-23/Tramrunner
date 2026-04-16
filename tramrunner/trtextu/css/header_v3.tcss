@@ -1,13 +1,33 @@
 Screen {
     align: center middle;
 }
-
 #stop-info-container {
     layout: grid;
     grid-size: 1 2;
     grid-rows: auto 1fr;
     grid-columns: 2fr 1fr;
     grid-gutter: 1;
+    &.outline {
+        &.small{
+            border: red;
+            background: blue;
+        }
+        &.wide{
+            background: darkred;
+        }
+    }
+}
+
+Tramrunner.outline {
+    &.small #stop-info-container {
+            border: red;
+            background: blue;
+    }
+    
+    &.wide #stop-info-container{
+        background: darkred;
+    }
+    
 }
 
 #header-v3 {
@@ -62,62 +82,102 @@ Screen {
     }
 }
 
-SiConfig {
-    align: center middle;
-    VerticalScroll {
-        border: panel $accent;
-        width: auto;
-        height: auto;
-        max-width: 90%;
-        max-height: 90%;
+SiConfig > VerticalScroll {
 
-    }
-}
-
-#config-modal > Container {
-    /*border: tab red;
-    &.buttonalign {
-    }*/
-}
-
-#config-buttons-wq {
-    layout: grid;
-    grid-size: 5;
-    grid-rows:3;
-    grid-columns: 1fr;
+    border: panel $accent;
+    width: auto;
     height: auto;
-    margin: 0 0;
-    Button {
-        margin: 0 0;
-    }
-}
-
-#conf-stop-finder {
-    layout: grid;
-    grid-size: 2 2;
-    grid-columns: 75% 25%;
-    height:auto;
-    margin: 1 0;
-    Container {
+    max-width: 90%;
+    max-height: 90%;
+    Container.wqbuttons {
         layout: grid;
+        grid-columns: 1fr;
+        height: auto;
+        margin: 0 0;
+        align: center middle;
+        Static {}
+        Button {margin: 0 0;}
     }
-
-    .label {
-        height: 3;
-    }
+    Container.conf-stop-finder {    
+        layout: grid;
+        grid-columns: auto 25%;
+        height:auto;
+        align: center middle;
+        margin: 1 0;
+        
+    }  
 }
-
-#conf-stop-finder-switches {
-    grid-size: 2 3;
-    grid-columns: auto;
-    height:auto;
-    margin: 0 0;
-    max-width: 100;
+Tramrunner.screen-size {
+    &.small SiConfig{
+        Container.wqbuttons {
+            grid-size: 2;
+        }
+        Container.conf-stop-finder {
+            grid-size: 1;
+        }
+    }
+    
+    &.wide SiConfig{
+        Container.wqbuttons {
+            grid-size: 2;
+        }
+        Container.conf-stop-finder {
+            grid-size: 3;
+        }
+    }
+    
+}
+ 
+SwitchList {
+    height: auto;
+    max-height: 15;
+    width: auto;
+    border: red;
+    padding: 1 1;
+    Container.entry {
+        layout: grid;
+        grid-size: 2 2;
+        grid-columns:  10;
+        grid-rows: auto;
+        content-align: center middle;
+        height:auto;
+        margin: 0 0;
+        max-width: 100;
+        width: auto;
+    }
     Switch {
         width: auto;
         height: auto;
     }
+    Static {
+    }
 }
+
+NumberClicker {
+    align: center middle;
+    Container.entry {
+        height: auto;
+        width: auto;
+    }
+    Button{
+        content-align: left middle;
+        max-width: 6;
+    }
+    Digits {
+        width: 6; 
+    }
+}
+
+TimePicker {
+    width: auto;
+    height: auto;
+    border: red;
+    NumberClicker {
+        height: auto;
+        padding: 1 1;
+    }
+}
+
 #conf-stop-finder-limit {
     layout: grid;
     grid-size: 1 3;
@@ -128,5 +188,5 @@ SiConfig {
 
 #content-v2 {
     layout: grid;
-    grid-size: 2 1;
+    grid-size: 1 1;
 }

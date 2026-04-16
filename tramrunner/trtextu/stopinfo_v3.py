@@ -1,17 +1,28 @@
 from textual import on
-
 from textual.app import ComposeResult
 from textual.screen import ModalScreen
 from textual.reactive import reactive
 from textual.validation import Length
-from textual.containers import Container, VerticalScroll
+from textual.containers import Container, VerticalScroll, Horizontal, HorizontalGroup
 from textual.widgets import Button, Input, Static, Digits, RichLog, DataTable, Switch
 from textual.widgets import Label, Placeholder, Collapsible, SelectionList, Pretty, RadioSet, RadioButton
+
+from .daclas import DepaMonConfig, SIHeaderInfo
+from dataclasses import asdict
 import utils, api
-from datetime import datetime
+from datetime import datetime, time
 import pytz
 
+
 class StopInfo(Container):
+    stop_info_config = reactive(DepaMonConfig(
+        #query_text="rac",
+        limit=20,
+        time ="",
+        isarrival=False,
+        shorttermchanges=False,
+        mot=["Tram", "CityBus", "IntercityBus", "SuburbanRailway", "Train"],#, "Cableway", "Ferry", "HailedSharedTaxi"]
+        ))
     def compose(self) -> ComposeResult:
         #yield StopInfoHeader_V2(id="header-v2")
         yield StopInfoHeader_V3(id="header-v3")
@@ -55,23 +66,17 @@ class StopInfo(Container):
         self.sort_depas(stop_info_data['Departures'])
 
     def get_data(self, query_text):
-        # assemble config and query departure monitor
-        query_config = {
-            'stopid': utils.get_stop_id_from_pointfinder(query_text),
-            'limit': 20,
-            'time': '',
-            'isarrival': False,
-            'shorttermchanges': False,
-            'mot': ["Tram", "CityBus", "IntercityBus", "SuburbanRailway", "Train"]#, "Cableway", "Ferry", "HailedSharedTaxi"]
-        }
-        stop_data = api.vvo_departure_monitor(**query_config)
+        self.stop_info_config.query_text = query_text
+        stop_data = api.vvo_departure_monitor(**asdict(self.stop_info_config))
 
         depa_grouped = self.sort_depas(stop_data['Departures'])
-        header = self.query_one("#header-v3", StopInfoHeader_V3)
+        header_info = SIHeaderInfo(
+            stop_data['Name'],
+            stop_data['Place'],
+            stop_data["ExpirationTime"]
+        )
+        self.query_one("#header-v3", StopInfoHeader_V3).fill_header_info(header_info)
         
-        header.stop_name = stop_data['Name']
-        header.stop_place = stop_data['Place']
-        header.stop_expiry = utils.diff_to_now(stop_data['ExpirationTime'])
 
         self.app.query_one("#content-log", RichLog).write(stop_data)
 
@@ -92,37 +97,29 @@ class SiConfig(ModalScreen):
         self.stop = stop_shortcuts
         super().__init__(name, id, classes)
     def compose(self) -> ComposeResult:
-        with VerticalScroll(id="config-modal"):
-            with Container(id="config-buttons-wq"):
-                yield Static("")
+        with VerticalScroll(id="config-modal", classes="scroller"):
+            with Container(id="config-save-quit", classes="wqbuttons"):
                 yield Button("Exit", disabled=False, id="button-conf-exit", variant="error")
-                yield Static("")
                 yield Button("Save", disabled=False, id="button-conf-save", variant="success")
-                yield Static("")
-            with Container(id="conf-stop-finder"):
-                with Container(id="conf-stop-finder-switches"):
-                    yield Switch(value=self.stops_only, animate=False, id="stops-only")
-                    yield Static("stops-only:", classes="label")
-                    yield Switch(value=self.regional_only, animate=False, id="regional-only")
-                    yield Static("regional-only", classes="label")
-                    yield Switch(value=self.stop, animate=False, id="stop-shortcuts")
-                    yield Static("stop-shortcuts", classes="label")
-                with Container(id="conf-stop-finder-limit"):
-                    yield Button("+", compact=True, id="conf_stop-finder-plus")
-                    yield Digits("10")
-                    yield Button("-", compact=True, id="conf_stop-finder-minus")
-
-
-            #yield SelectionList[int](  
-            #    ("󰿧 Tram ", 0, True),
-            #    ("󰃧 Bus  ", 1, True),
-            #    (" Bahn ", 2, True),
-            #    ("󰣄 Zug  ", 3, True),
-            #    (" SSB  ", 4, False),
-            #    ("󰈓 Fähr ", 5, False),
-            #    ("󰓿 taxi ", 6, False),
-            #    id="mot-selector",
-            #)
+            with Container(classes="conf-stop-finder"):
+                yield SwitchList([
+                    {"id":"stops-only"    ,"value":self.stops_only   ,"label":"stops-only"},
+                    {"id":"regional-only" ,"value":self.regional_only,"label":"regional-only"},
+                    {"id":"stop-shortcuts","value":self.stop         ,"label":"stop-shortcuts"},
+                ])
+                yield NumberClicker({"small-buttons": True, "min": 0, "max": 99})   
+                yield TimePicker()
+                with Container(id="conf-mot"):                
+                    yield SelectionList[int](  
+                        ("󰿧 Tram ", 0, True),
+                        ("󰃧 Bus  ", 1, True),
+                        (" Bahn ", 2, True),
+                        ("󰣄 Zug  ", 3, True),
+                        (" SSB  ", 4, False),
+                        ("󰈓 Fähr ", 5, False),
+                        ("󰓿 taxi ", 6, False),
+                        id="mot-selector",
+                    )
 
     @on(Button.Pressed, "#button-conf-save")
     def button_conf_save(self, event):
@@ -143,11 +140,61 @@ class SiConfig(ModalScreen):
         }
         self.dismiss(settings)
 
+class SwitchList(VerticalScroll):
+    def __init__(self, config, **kwargs):
+        self.config = config
+        super().__init__(**kwargs) 
+    def compose(self) -> ComposeResult:
+        for item in self.config:
+            with Container(classes="entry"):
+                yield Switch(value=item["value"], animate=False, id=item["id"])
+                yield Static(item["label"], classes="label")
+
+class NumberClicker(Container):
+    number = reactive(0, init=False)
+    def __init__(self, config, **kwargs):
+        self.config = config
+        super().__init__(**kwargs)
+    def compose(self) -> ComposeResult:
+        with Container(classes="entry"):
+            yield Button("+", compact=self.config["small-buttons"], classes="plus")
+            yield Digits(self.digits, id="digitz")
+            yield Button("-", compact=self.config["small-buttons"], classes="minus")
+    def watch_number(self):
+        self.query_one(Digits).update(self.digits)
+        
+    @property
+    def digits(self):
+        return "{:02d}".format(self.number)
+    @on(Button.Pressed, ".plus")
+    def add(self):
+        d = self.number + 1
+        if d > self.config["max"]: d = self.config["min"]
+        self.number = d
+    @on(Button.Pressed, ".minus")
+    def substract(self):
+        d = self.number - 1
+        if d < self.config["min"]: d = self.config["max"]
+        self.number = d
+
+class TimePicker(Container):
+    hours = reactive(0)
+    minutes = reactive(0)
+    seconds = reactive(0)
+    time: reactive[datetime] = reactive(time())
+    def compose(self) -> ComposeResult:
+        with HorizontalGroup(classes="tp-cont"):
+            yield NumberClicker({"small-buttons": True, "min": 0, "max": 23}).data_bind(number=TimePicker.hours)
+            yield NumberClicker({"small-buttons": True, "min": 0, "max": 59}).data_bind(number=TimePicker.minutes)
+            yield NumberClicker({"small-buttons": True, "min": 0, "max": 59}).data_bind(number=TimePicker.seconds)
+    def compute_time(self) -> datetime:
+        return time(hour=self.hours, minute=self.minutes, second=self.seconds)
+
 
 class StopInfoContent(Container):
     def compose(self) -> ComposeResult:
         yield RichLog(id="content-log")
-        yield DataTable(id="test-tt")
+        #yield DataTable(id="test-tt")
 
 
 class StopInfoHeader_V3(Container):
@@ -182,6 +229,11 @@ class StopInfoHeader_V3(Container):
         yield Static(classes="name", id="disp-name")
         yield Static(classes="time alt", id="disp-exp")
 
+
+    def fill_header_info(self, header_info):
+        self.stop_name = header_info.stop_name
+        self.stop_place = header_info.stop_place
+        self.stop_expiry = header_info.expiration_text
 
     @on(Input.Submitted, "#stop-info-text-input")
     @on(Button.Pressed, "#button-refresh")
