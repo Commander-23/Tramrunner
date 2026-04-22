@@ -2,7 +2,7 @@ __pycache__
 .vscode/*
 .venv/*
 data/generated_files
-
+testies.py
 www/*
 
 .gitignore

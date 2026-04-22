@@ -1,0 +1,52 @@
+$gridwidth: 4;
+$gridheight: 3;
+$pad-lr: 0 1 0 1;
+$pad-tb: 1 0 1 0;
+$border-top: tab $accent-darken-2;
+$border-side: thick $accent-darken-2;
+
+$col-tram: #dd0b2f
+$col-bus: #005e79
+$col-sbahn: #009551
+$col-train: #00a15e
+
+TramCardBig {
+    margin: 0 0 1 0;
+    padding: 0 0 0 0;
+    height: auto;
+    border-top: $border-top;
+    border-left: $border-side;
+
+    Grid {
+        background: $secondary-background-darken-3;
+        grid-size: $gridwidth $gridheight;
+        grid-rows: 1;
+        grid-columns: auto auto auto 2fr;
+        height: auto;
+        width: 100%;
+
+        Label {
+            content-align: center middle;
+            width: 100%;
+            padding: $pad-lr;
+
+            &.seperator {
+                background: $secondary-background;
+                column-span: $gridwidth;
+            }
+
+            &.mot {}
+            &.direction {
+                background: purple;
+                padding: $pad-lr;
+            }
+            &.live-time {}
+            &.platform {}
+        }
+        Digits {
+            width: auto;
+            padding: $pad-lr;
+            row-span: 3;
+        }
+    }
+}
