@@ -39,12 +39,13 @@ TramCardBig {
             &.direction {
                 background: purple;
                 padding: $pad-lr;
+                width: 1fr;
             }
             &.live-time {}
             &.platform {}
         }
         Digits {
-            width: auto;
+            min-width: 11;
             padding: $pad-lr;
             row-span: 3;
         }
