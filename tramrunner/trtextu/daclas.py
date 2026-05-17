@@ -1,4 +1,5 @@
 from dataclasses import dataclass, field
+from typing import List, Dict
 from datetime import datetime
 import utils
 
@@ -32,3 +33,19 @@ class SIHeaderInfo:
         if isinstance(self.expiration_time, str):
             self.expiration_time = utils.vvo_time_conv(self.expiration_time)
             self.expiration_text = utils.diff_to_now(self.expiration_time)
+
+
+#@dataclass
+#class StopInfoGather:
+#    Id: str
+##    DlId: str             # no need, can be assembled from LineName & id
+#    LineName: int|str      # usually int sometimes str "8, 10, S8, S1"
+#    Direction: str         # sometimes really long --> truncate
+#    Platform: dict
+#    Mot: str
+#    RealTime: str
+#    ScheduledTime: datetime | None = field(init=False)
+#    State: str = ""
+#    RouteChanges: list
+#    CancelReasons: list
+#    Occupancy: str = ""

@@ -107,8 +107,8 @@ class SiConfig(ModalScreen):
                     {"id":"regional-only" ,"value":self.regional_only,"label":"regional-only"},
                     {"id":"stop-shortcuts","value":self.stop         ,"label":"stop-shortcuts"},
                 ])
-                yield NumberClicker({"small-buttons": True, "min": 0, "max": 99})   
                 yield TimePicker()
+                yield NumberClicker({"small-buttons": True, "min": 0, "max": 99})   
                 with Container(id="conf-mot"):                
                     yield SelectionList[int](  
                         ("󰿧 Tram ", 0, True),
@@ -183,12 +183,18 @@ class TimePicker(Container):
     seconds = reactive(0)
     time: reactive[datetime] = reactive(time())
     def compose(self) -> ComposeResult:
-        with HorizontalGroup(classes="tp-cont"):
-            yield NumberClicker({"small-buttons": True, "min": 0, "max": 23}).data_bind(number=TimePicker.hours)
-            yield NumberClicker({"small-buttons": True, "min": 0, "max": 59}).data_bind(number=TimePicker.minutes)
-            yield NumberClicker({"small-buttons": True, "min": 0, "max": 59}).data_bind(number=TimePicker.seconds)
+        #with HorizontalGroup(classes="tp-cont"):
+        yield NumberClicker({"small-buttons": True, "min": 0, "max": 23}).data_bind(number=TimePicker.hours)
+        yield NumberClicker({"small-buttons": True, "min": 0, "max": 59}).data_bind(number=TimePicker.minutes)
+        yield NumberClicker({"small-buttons": True, "min": 0, "max": 59}).data_bind(number=TimePicker.seconds)
+        #with HorizontalGroup(classes="tp-butts-grp"):
+        yield Button("Now", classes="tp-butts", id="tp-button-now")
+        yield Button("+15", classes="tp-butts", id="tp-button-p15")
+        yield Button("+30", classes="tp-butts", id="tp-button-p30")
     def compute_time(self) -> datetime:
         return time(hour=self.hours, minute=self.minutes, second=self.seconds)
+    def watch_time(self):
+        self.app.query_one("#log_content", RichLog).write(time.strftime("%H:%M:%S"))
 
 
 class StopInfoContent(Container):
