@@ -4,6 +4,7 @@ from textual.widgets import Header, Footer, TabbedContent, TabPane, Input, RichL
 from textual.containers import Container, Grid, VerticalScroll, Vertical, VerticalGroup
 from textual.validation import Validator, ValidationResult
 from datetime import datetime
+from dataclasses import dataclass
 
 
 class TramCardBig(Container):
@@ -47,3 +48,26 @@ class TramCardBig(Container):
             yield Label(self.state, classes="delayinf")
             yield Placeholder("0")
             yield Placeholder()
+
+@dataclass
+class CardData:
+    tid: str
+    line: str
+    direction: str  # destination name
+    scheduled: datetime
+    real_time: datetime | None = None
+    state: str = ""  # real-time state, e.g. "InTime", "Delayed"
+    platform: Platform | None = None
+    mode: str = ""  # e.g. "Tram", "CityBus", "SuburbanRailway", "Ferry"
+    occupancy: str = "Unknown"  # "Unknown", "ManySeats", "StandingOnly", "Full"
+
+    def __post_init__(self):
+        pass
+
+@dataclass(frozen=True, slots=True)
+class Platform:
+    """A platform or track at a stop."""
+
+    name: str
+    type: str  # "Platform" for bus/tram stops, "Railtrack" for train stations
+
