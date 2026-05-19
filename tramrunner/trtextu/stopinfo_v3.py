@@ -12,7 +12,7 @@ from dataclasses import asdict
 import utils, api
 from datetime import datetime, time
 import pytz
-
+from .tramcards_test import CardData, Platform, TramCardBig
 
 class StopInfo(Container):
     stop_info_config = reactive(DepaMonConfig(
@@ -77,6 +77,34 @@ class StopInfo(Container):
         )
         self.query_one("#header-v3", StopInfoHeader_V3).fill_header_info(header_info)
         
+        for dep in stop_data['Departures']:
+            scheduled = utils.vvo_time_conv(dep["ScheduledTime"])
+            rt_s = dep.get("RealTime", None)
+            if not rt_s:
+                real_time = None
+            else:
+                try:
+                    real_time = utils.vvo_time_conv(rt_s)
+                except ValueError:
+                    real_time = None
+            plf = dep.get("Platform")
+            if plf:
+                new_plat = Platform(name=plf.get("Name", ""), type=plf.get("Type", ""))
+            else: Platform(name="", type="")
+            yield TramCardBig(
+                **asdict(CardData(
+                    tid=dep.get("Id", ""),
+                    line=dep.get("LineName", ""),
+                    direction=dep.get("Direction", ""),
+                    scheduled=scheduled,
+                    real_time=real_time,
+                    state=dep.get("State", ""),
+                    platform=new_plat,
+                    mode=dep.get("Mot", ""),
+                    occupancy=dep.get("Occupancy", "Unknown"),
+                ))
+            )
+
 
         self.app.query_one("#content-log", RichLog).write(stop_data)
 
@@ -181,7 +209,7 @@ class TimePicker(Container):
     hours = reactive(0)
     minutes = reactive(0)
     seconds = reactive(0)
-    time: reactive[datetime] = reactive(time())
+    settime: reactive[datetime] = reactive(time())
     def compose(self) -> ComposeResult:
         #with HorizontalGroup(classes="tp-cont"):
         yield NumberClicker({"small-buttons": True, "min": 0, "max": 23}).data_bind(number=TimePicker.hours)
@@ -191,15 +219,16 @@ class TimePicker(Container):
         yield Button("Now", classes="tp-butts", id="tp-button-now")
         yield Button("+15", classes="tp-butts", id="tp-button-p15")
         yield Button("+30", classes="tp-butts", id="tp-button-p30")
-    def compute_time(self) -> datetime:
+    def compute_settime(self) -> datetime:
         return time(hour=self.hours, minute=self.minutes, second=self.seconds)
-    def watch_time(self):
-        self.app.query_one("#log_content", RichLog).write(time.strftime("%H:%M:%S"))
+    def watch_settime(self, settime):
+        self.app.query_one("#log1_content", RichLog).write(settime.strftime("%H:%M:%S1"))
 
 
 class StopInfoContent(Container):
     def compose(self) -> ComposeResult:
-        yield RichLog(id="content-log")
+        yield Label("FYAD", id="fyad")
+        #yield RichLog(id="content-log")
         #yield DataTable(id="test-tt")
 
 
@@ -234,7 +263,6 @@ class StopInfoHeader_V3(Container):
         yield Static("󰰂",classes="icon", id="disp-icon")
         yield Static(classes="name", id="disp-name")
         yield Static(classes="time alt", id="disp-exp")
-
 
     def fill_header_info(self, header_info):
         self.stop_name = header_info.stop_name
