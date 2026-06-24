@@ -4,7 +4,7 @@ from trtextu import *
 
 class Tramrunner(App):
     """We gonn make it"""
-    CSS_FILES = ["trtextu/css/header_v3.tcss","trtextu/css/loggerPane.tcss"]
+    CSS_FILES = ["trtextu/css/header_v3.tcss","trtextu/css/loggerPane.tcss", "trtextu/css/tramcards.tcss"]
     CSS_PATH = CSS_FILES
     def compose(self) -> ComposeResult:
         yield Header(show_clock=True)

@@ -1,8 +1,5 @@
-from textual import on
-from textual.app import App, ComposeResult
-from textual.widgets import Header, Footer, TabbedContent, TabPane, Input, RichLog, Button, Digits,Label, Placeholder
-from textual.containers import Container, Grid, VerticalScroll, Vertical, VerticalGroup
-from textual.validation import Validator, ValidationResult
+from textual.widgets import Digits,Label, Placeholder
+from textual.containers import Container, Grid
 from datetime import datetime
 from dataclasses import dataclass
 
@@ -21,10 +18,10 @@ class TramCardBig(Container):
         self.tid = tid
         self.line = line
         self.direction = direction
-        self.scheduled = scheduled.strftime("%H:%M:%S")
-        self.real_time = "None" #real_time.strftime("%H:%M:%S")
+        self.scheduled = scheduled#.strftime("%H:%M:%S")
+        self.real_time = real_time 
         self.state = state
-        self.platform = "platform"
+        self.platform = platform
         self.mode = mode
         self.occupancy = occupancy
         #self.val_plf = f"{values.get('Platform').get('Type')} {values['Platform']['Name']}"
@@ -37,15 +34,15 @@ class TramCardBig(Container):
             #yield Label(self.val_sep, classes="seperator")
             yield Digits(self.line)
 
-            yield Label("Scheduled", classes="direction")
-            yield Label(self.state, classes="mot")
+            yield Label(self.mode, classes="direction")
+            yield Label(self.platform, classes="mot")
             yield Placeholder()
 
             yield Label(self.scheduled, classes="live-time")
-            yield Label(self.real_time, classes="platform")
+            yield Label(self.state, classes="platform")
             yield Placeholder()
 
-            yield Label(self.state, classes="delayinf")
+            yield Label(self.real_time, classes="delayinf")
             yield Placeholder("0")
             yield Placeholder()
 

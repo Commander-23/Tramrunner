@@ -21,7 +21,7 @@ TramCardBig {
         background: $secondary-background-darken-3;
         grid-size: $gridwidth $gridheight;
         grid-rows: 1;
-        grid-columns: auto auto auto 2fr;
+        grid-columns: 1fr 2fr 2fr 2fr;
         height: auto;
         width: 100%;
 

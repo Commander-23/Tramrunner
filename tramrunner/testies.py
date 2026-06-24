@@ -218,28 +218,6 @@ sample_data = [
             "Occupancy": "ManySeats"
         }]
 
-@dataclass
-class CardData:
-    tid: str
-    line: str
-    direction: str  # destination name
-    scheduled: datetime
-    real_time: datetime | None = None
-    state: str = ""  # real-time state, e.g. "InTime", "Delayed"
-    platform: Platform | None = None
-    mode: str = ""  # e.g. "Tram", "CityBus", "SuburbanRailway", "Ferry"
-    occupancy: str = "Unknown"  # "Unknown", "ManySeats", "StandingOnly", "Full"
-
-    def __post_init__(self):
-        pass
-
-@dataclass(frozen=True, slots=True)
-class Platform:
-    """A platform or track at a stop."""
-
-    name: str
-    type: str  # "Platform" for bus/tram stops, "Railtrack" for train stations
-
 class TramCardsApp(App[None]):
     """We gonn make it"""
     #CSS_FILES = ["trtextu/css/header_v3.tcss","trtextu/css/loggerPane.tcss"]
@@ -248,16 +226,15 @@ class TramCardsApp(App[None]):
     def compose(self) -> ComposeResult:
         with VerticalScroll():
             for dep in sample_data:
-
-                scheduled = utils.vvo_time_conv(dep["ScheduledTime"])
+                scheduled = utils.vvo_time_conv(dep["ScheduledTime"]).strftime("%H:%M:%S")
                 rt_s = dep.get("RealTime", None)
                 if not rt_s:
-                    real_time = None
+                    real_time = "None"
                 else:
                     try:
-                        real_time = utils.vvo_time_conv(rt_s)
+                        real_time = utils.vvo_time_conv(rt_s).strftime("%H:%M:%S")
                     except ValueError:
-                        real_time = None
+                        real_time = "None"
                 plf = dep.get("Platform")
                 if plf:
                     new_plat = Platform(name=plf.get("Name", ""), type=plf.get("Type", ""))
@@ -270,7 +247,7 @@ class TramCardsApp(App[None]):
                         scheduled=scheduled,
                         real_time=real_time,
                         state=dep.get("State", ""),
-                        platform=new_plat,
+                        platform=f"{new_plat.type}: {new_plat.name}",
                         mode=dep.get("Mot", ""),
                         occupancy=dep.get("Occupancy", "Unknown"),
                     ))
