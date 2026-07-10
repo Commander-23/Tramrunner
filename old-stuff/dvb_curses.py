@@ -1,6 +1,6 @@
 import curses
 import time
-from stop_info_tui import stop_info_tui
+#from stop_info_tui import stop_info_tui
 import tui
 
 
@@ -27,7 +27,7 @@ def main(stdscr):
     sub_menu = tui.PageSubMenu(stdscr, page_menus)
     sub_menu.render_sub_menu(page_menus[page_select], menu_item_select)
     info_screen = tui.InfoScreen(stdscr, page_menus)
-    info_screen.render_stop_info1(stop_info_tui("rac"))
+    #info_screen.render_stop_info1()#stop_info_tui("rac"))
     while True:
 
         # Handle input
