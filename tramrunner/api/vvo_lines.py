@@ -6,7 +6,10 @@ def vvo_lines(stopid: str):
     defaulturl = "https://webapi.vvo-online.de/stt/lines"
     if not stopid:
         raise ValueError("Stop ID cannot be empty.")
-    
+
     query_params = {"stopid": stopid}
-    
+
     return query_vvo_api(defaulturl, None, query_params)
+
+if __name__ == "__main__":
+    vvo_lines(33007513)
