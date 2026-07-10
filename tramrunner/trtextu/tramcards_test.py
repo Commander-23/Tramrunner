@@ -5,13 +5,6 @@ from dataclasses import dataclass
 
 
 class TramCardBig(Container):
-    val_sep = "---Header-Line---"
-    val_dig = "99"
-    val_mot = "tram"
-    val_dir = " --> Kleinzschachwitz"
-    val_plf = "Platform 1"
-    val_tli = "live: 00:00"
-    val_del = "Delayed"
     #tram color: tomato
     #bus color: steelblue
     def __init__(self, tid,line,direction,scheduled,real_time,state,platform,mode,occupancy, **kwargs):

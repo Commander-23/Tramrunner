@@ -8,13 +8,20 @@ from textual.widgets import Button, Input, Static, Digits, RichLog, DataTable, S
 from textual.widgets import Label, Placeholder, Collapsible, SelectionList, Pretty, RadioSet, RadioButton
 
 from .daclas import DepaMonConfig, SIHeaderInfo
-from dataclasses import asdict
 import utils, api
 from datetime import datetime, time
 import pytz
 from .tramcards_test import CardData, Platform, TramCardBig
 
 class StopInfo(Container):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.new_conf = {
+            "poifi_limit"  : 0,
+            "stopsOnly"    : False,
+            "regionalOnly" : False,
+            "stopShortcuts": False,
+        }
     stop_info_config = reactive(DepaMonConfig(
         #query_text="rac",
         limit=10,
@@ -28,44 +35,6 @@ class StopInfo(Container):
         yield StopInfoHeader_V3(id="header-v3")
         yield StopInfoContent(id="content-v2")
 
-    def test(self):
-        query_text_val = self.query_one("#stop-info-text-input", Input).value
-        content_box = self.parent.parent.query_one("#log1_content", RichLog)
-        
-        # TODO pull this info from the config Modal Screen
-        query_config = {
-            'stopid': utils.get_stop_id_from_pointfinder("rac"),
-            'limit': 10,
-            'time': '',
-            'isarrival': False,
-            'shorttermchanges': False,
-            'mot': ["Tram", "CityBus", "IntercityBus", "SuburbanRailway", "Train", "Cableway", "Ferry", "HailedSharedTaxi"]
-        }
-        stop_info_data = api.vvo_departure_monitor(**query_config)
-        self.get_data(stop_info_data)
-
-        depa_grouped = self.sort_depas(stop_info_data['Departures'])
-        for depa_dir in depa_grouped:
-            new_thing = depa_grouped[depa_dir]
-            info_line = f"{new_thing[0]['LineName']} - {depa_grouped[depa_dir][0]['Direction']}"
-            info_count = f"{len(new_thing)}"
-            content_box.write(info_line)
-            content_box.write(info_count)
-
-        #table = self.query_one("#test-tt", DataTable)
-        #table.add_columns("Id", "Number", "Name")
-        #rows = []
-        #for key, group in depa_grouped.items():
-        #    rows.append((f"[b]--- {key} ---[/b]", "", ""))
-        #    for item in group:
-        #        rows.append((
-        #            utils.diff_to_now(item["ScheduledTime"]),
-        #            item["LineName"],
-        #            item["Direction"]
-        #        ))
-        #for row in rows:
-        #    table.add_row(*row)
-        #self.sort_depas(stop_info_data['Departures'])
 
     @on(Button.Pressed, "#button-refresh")
     @on(Input.Submitted, "#stop-info-text-input")
@@ -73,7 +42,7 @@ class StopInfo(Container):
         logger = self.app.query_one("#log1_content", RichLog)
         header = self.query_one("#header-v3", StopInfoHeader_V3)
         self.stop_info_config.query_text = self.query_one("#stop-info-text-input", Input).value
-        stop_data = api.vvo_departure_monitor(**asdict(self.stop_info_config))
+        stop_data = api.vvo_departure_monitor(**self.stop_info_config.__dict__)
         content = self.parent.query_one("#SICScroller", VerticalScroll)
 
         header_info = SIHeaderInfo(
@@ -82,7 +51,7 @@ class StopInfo(Container):
             stop_data["ExpirationTime"]
         )
         header.fill_header_info(header_info)
-        
+
         for dep in stop_data['Departures']:
             logger.write(dep)
             scheduled = utils.vvo_time_conv(dep["ScheduledTime"]).strftime("%H:%M:%S")
@@ -98,7 +67,7 @@ class StopInfo(Container):
             if plf:
                 new_plat = Platform(name=plf.get("Name", ""), type=plf.get("Type", ""))
             else: new_plat = Platform(name="no", type="data")
-            content.mount(TramCardBig(**asdict(CardData(
+            content.mount(TramCardBig(**CardData(
                         tid       = dep.get("Id", ""),
                         line      = dep.get("LineName", ""),
                         direction = dep.get("Direction", ""),
@@ -108,48 +77,13 @@ class StopInfo(Container):
                         platform  = f"{new_plat.type}: {new_plat.name}",
                         mode      = dep.get("Mot", ""),
                         occupancy = dep.get("Occupancy", "Unknown"),
-            ))))
-            #yield TramCardBig(    
-            #    tid        = 1, #dep.get("Id", ""),
-            #    line       = 2, #dep.get("LineName", ""),
-            #    direction  = 3, #dep.get("Direction", ""),
-            #    scheduled  = 4, #scheduled,
-            #    real_time  = 5, #real_time,
-            #    state      = 6, #dep.get("State", ""),
-            #    platform   = 7, #new_plat,
-            #    mode       = 8, #dep.get("Mot", ""),
-            #    occupancy  = 9, #dep.get("Occupancy", "Unknown"),
-            #)
-        
+            ).__dict__))
+
         #Logging Stuuff
         logger.write(self.stop_info_config)
         logger.write(header_info)
         #logger.write(stop_data)
 
-#
-#            tid=dep.get("Id", ""),
-#            line=dep.get("LineName", ""),
-#            direction=dep.get("Direction", ""),
-#            state=dep.get("State", ""),
-#            mode=dep.get("Mot", ""),
-#            occupancy=dep.get("Occupancy", "Unknown"),
-#            logger.write(tid)
-#            logger.write(line)
-#            logger.write(direction)
-#            logger.write(state)
-#            logger.write(mode)
-#            logger.write(occupancy)
-#            #yield TramCardBig(    
-            #    tid=dep.get("Id", ""),
-            #    line=dep.get("LineName", ""),
-            #    direction=dep.get("Direction", ""),
-            #    #scheduled=scheduled,
-            #    #real_time=real_time,
-            #    state=dep.get("State", ""),
-            #    #platform=new_plat,
-            #    mode=dep.get("Mot", ""),
-            #    occupancy=dep.get("Occupancy", "Unknown"),
-            #)
 
 
     def get_data(self, query_text):
@@ -171,7 +105,7 @@ class StopInfo(Container):
                 new_plat = Platform(name=plf.get("Name", ""), type=plf.get("Type", ""))
             else: Platform(name="", type="")
             yield TramCardBig(
-                **asdict(CardData(
+                **CardData(
                     tid=dep.get("Id", ""),
                     line=dep.get("LineName", ""),
                     direction=dep.get("Direction", ""),
@@ -181,7 +115,7 @@ class StopInfo(Container):
                     platform=new_plat,
                     mode=dep.get("Mot", ""),
                     occupancy=dep.get("Occupancy", "Unknown"),
-                ))
+                ).__dict__
             )
 
 
@@ -204,11 +138,11 @@ class SiConfig(ModalScreen):
         self.stop = stop_shortcuts
         super().__init__(name, id, classes)
     def compose(self) -> ComposeResult:
-        with VerticalScroll(id="config-modal", classes="scroller"):
+        with Container(classes="configCont"):
             with Container(id="config-save-quit", classes="wqbuttons"):
                 yield Button("Exit", disabled=False, id="button-conf-exit", variant="error")
                 yield Button("Save", disabled=False, id="button-conf-save", variant="success")
-            with Container(classes="conf-stop-finder"):
+            with VerticalScroll(id="config-modal", classes="conf-stop-finder"):
                 yield SwitchList([
                     {"id":"stops-only"    ,"value":self.stops_only   ,"label":"stops-only"},
                     {"id":"regional-only" ,"value":self.regional_only,"label":"regional-only"},
@@ -227,6 +161,8 @@ class SiConfig(ModalScreen):
                         ("󰓿 taxi ", 6, False),
                         id="mot-selector",
                     )
+
+
 
     @on(Button.Pressed, "#button-conf-save")
     def button_conf_save(self, event):
@@ -301,13 +237,19 @@ class TimePicker(Container):
     def watch_settime(self, settime):
         self.app.query_one("#log1_content", RichLog).write(settime.strftime("%H:%M:%S1"))
 
+class PointFinderConfig(Container):
+    def __init__(self, *children, name = None, id = None, classes = None, disabled = False, markup = True, limit = 1, stopsOnly = False, regionalOnly = False, stopShortcuts = False):
+        self.limit: int = limit
+        self.stopsOnly: bool = stopsOnly
+        self.regionalOnly: bool = regionalOnly
+        self.stopShortcuts: bool = stopShortcuts
+        super().__init__(*children, name=name, id=id, classes=classes, disabled=disabled, markup=markup)
+    def compose(self) -> ComposeResult:
+        yield
 
 class StopInfoContent(Container):
     def compose(self) -> ComposeResult:
         yield VerticalScroll(id="SICScroller")
-        #yield Label("FYAD", id="fyad")
-        #yield RichLog(id="content-log")
-        #yield DataTable(id="test-tt")
 
 
 class StopInfoHeader_V3(Container):

@@ -7,8 +7,7 @@ def vvo_pointfinder(query: str, limit: int = 0, stopsOnly: bool = False, regiona
 
     if not query:
         raise ValueError("Query parameter cannot be empty.")
-    
-    
+
     query_params = {
         "query": query,
         "limit": limit,

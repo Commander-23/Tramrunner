@@ -1,9 +1,8 @@
 from dataclasses import dataclass, field
-from typing import List, Dict
 from datetime import datetime
 import utils
-
 import api, utils
+
 @dataclass
 class DepaMonConfig:
     stopid: str = field(init=False)

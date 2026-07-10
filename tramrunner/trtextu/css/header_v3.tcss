@@ -82,32 +82,6 @@ Tramrunner.outline {
     }
 }
 
-SiConfig > VerticalScroll {
-
-    border: panel $accent;
-    width: auto;
-    height: auto;
-    max-width: 90%;
-    max-height: 90%;
-    Container.wqbuttons {
-        layout: grid;
-        grid-columns: 1fr;
-        height: auto;
-        margin: 0 0;
-        align: center middle;
-        Static {}
-        Button {margin: 0 0;}
-    }
-    Container.conf-stop-finder {    
-        layout: grid;
-        grid-columns: auto;
-        width: auto;
-        height:auto;
-        align: center middle;
-        margin: 1 0;
-        
-    }  
-}
 Tramrunner.screen-size {
     &.small SiConfig{
         Container.wqbuttons {
@@ -154,39 +128,9 @@ SwitchList {
     }
 }
 
-NumberClicker {
-    align: center middle;
-    Container.entry {
-        height: auto;
-        width: auto;
-    }
-    Button{
-        content-align: left middle;
-        max-width: 6;
-    }
-    Digits {
-        width: 6; 
-    }
-}
 
-TimePicker {
-    width: auto;
-    height: auto;
-    border: red;
-    layout: grid;
-    grid-size: 3;
-    grid-columns: auto;
-    NumberClicker {
-        height: auto;
-        padding: 0 1 1 0;
-        margin: 0 0 0 0;
-    }
-    .tp-butts {
-        max-width: 6;
-        padding: 0 0 0 0;
-        margin: 0 0 0 0;
-    }
-}
+
+
 
 #conf-stop-finder-limit {
     layout: grid;
