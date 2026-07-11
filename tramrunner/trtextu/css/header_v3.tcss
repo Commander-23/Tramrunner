@@ -128,10 +128,6 @@ SwitchList {
     }
 }
 
-
-
-
-
 #conf-stop-finder-limit {
     layout: grid;
     grid-size: 1 3;

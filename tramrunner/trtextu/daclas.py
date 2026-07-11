@@ -48,3 +48,23 @@ class SIHeaderInfo:
 #    RouteChanges: list
 #    CancelReasons: list
 #    Occupancy: str = ""
+
+@dataclass
+class AppConfig:
+    pointFinder: PointFinderConfig
+    stopInfo: StopInfoConfig
+
+@dataclass
+class PointFinderConfig:
+    limit:         int  = 5
+    stopsOnly:     bool = True
+    regionalOnly:  bool = True
+    stopShortcuts: bool = False
+
+@dataclass
+class StopInfoConfig:
+    limit: int =10,
+    time:         str|None = "",
+    isarrival:        bool = False,
+    shorttermchanges: bool = False,
+    mot: list = ["Tram", "CityBus", "IntercityBus", "SuburbanRailway", "Train"],#, "Cableway", "Ferry", "HailedSharedTaxi"]
