@@ -6,11 +6,11 @@ from textual.containers import Container, VerticalScroll, Horizontal, Horizontal
 from textual.widgets import Button, Input, Static, Digits, RichLog, DataTable, Switch
 from textual.widgets import Label, Placeholder, Collapsible, SelectionList, Pretty, RadioSet, RadioButton
 
-from .daclas import DepaMonConfig, SIHeaderInfo
+from .daclas import *
 import utils, api
 from datetime import datetime, time
 import pytz
-from .tramcards_test import CardData, Platform, TramCardBig
+from .tramcards_test import TramCardBig
 
 class StopInfo(Container):
     def __init__(self, **kwargs):
@@ -46,6 +46,7 @@ class StopInfo(Container):
     @on(Button.Pressed, "#button-refresh")
     @on(Input.Submitted, "#stop-info-text-input")
     def process_search_input(self):
+        self.button_clear()
         logger = self.app.query_one("#log1_content", RichLog)
         header = self.query_one("#header-v3", StopInfoHeader_V3)
         self.stop_info_config.query_text = self.query_one("#stop-info-text-input", Input).value
@@ -61,7 +62,9 @@ class StopInfo(Container):
         header.fill_header_info(header_info)
 
         for dep in stop_data['Departures']:
-            logger.write(dep)
+            card_data = CardData()
+            
+
             scheduled = utils.vvo_time_conv(dep["ScheduledTime"]).astimezone().strftime("%H:%M:%S")
             rt_s = dep.get("RealTime", None)
             if not rt_s:
@@ -75,24 +78,25 @@ class StopInfo(Container):
             if plf:
                 new_plat = Platform(name=plf.get("Name", ""), type=plf.get("Type", ""))
             else: new_plat = Platform(name="no", type="data")
-            new_card = TramCardBig(**CardData(
-                        tid       = dep.get("Id", ""),
-                        line      = dep.get("LineName", ""),
-                        direction = dep.get("Direction", ""),
-                        scheduled = scheduled,
-                        real_time = real_time,
-                        state     = dep.get("State", ""),
-                        platform  = f"{new_plat.type}: {new_plat.name}",
-                        mode      = dep.get("Mot", ""),
-                        occupancy = dep.get("Occupancy", "Unknown"),
-            ).__dict__)
+
+            card_data.tid = dep.get("Id", "")
+            card_data.line = dep.get("LineName", "")
+            card_data.direction = dep.get("Direction", "")
+            card_data.scheduled = scheduled,
+            card_data.real_time = real_time,
+            card_data.state     = dep.get("State", ""),
+            card_data.platform  = f"{new_plat.type}: {new_plat.name}",
+            card_data.mode      = dep.get("Mot", ""),
+            card_data.occupancy = dep.get("Occupancy", "Unknown"),
+            new_card = TramCardBig(**card_data)
+            new_card.add_class(dep.get("Mot", ""))
             content.mount(new_card)
             self.widgets_disp.append(new_card)
 
         #Logging Stuuff
         logger.write(self.stop_info_config)
         logger.write(header_info)
-        #logger.write(stop_data)
+
 
     def get_data(self, query_text):
 
@@ -149,17 +153,18 @@ class StopInfoHeader_V3(Container):
     error_msg = reactive("")
     stop_place = reactive("")
     stop_name = reactive("")
-    stop_expiry = reactive("")
     conf_poif_stops_only = reactive(False)
     conf_poif_regional_only = reactive(False)
     conf_poif_stop_shortcuts = reactive(False)
     settings = reactive([])
-
+    def __init__(self, *children, name = None, id = None, classes = None, disabled = False, markup = True):
+        super().__init__(*children, name=name, id=id, classes=classes, disabled=disabled, markup=markup)
+        self.stop_name = "[i][b]stop-name[/b][/i]"
+        self.stop_place = "[i]city[/i]"
     def render(self):
-        self.query_one("#disp-err", Static).update(self.error_msg)
+        #self.query_one("#disp-err", Static).update(self.error_msg)
         self.query_one("#disp-place", Static).update(self.stop_place)
         self.query_one("#disp-name", Static).update(self.stop_name)
-        self.query_one("#disp-exp", Static).update(self.stop_expiry)
         return super().render()
 
     def compose(self) -> ComposeResult:
@@ -171,20 +176,23 @@ class StopInfoHeader_V3(Container):
         yield Button("\nrfrsh", id="button-refresh", variant="success")
         yield Button("\nclear", id="button-clear", variant="primary")
         yield Button("\nconf", id="button-conf-show", variant="primary")
-        yield Static(classes="err alt", id="disp-err")
+        #yield Static(classes="err alt", id="disp-err")
         yield Static(classes="place", id="disp-place")
         yield Static("󰰂",classes="icon", id="disp-icon")
         yield Static(classes="name", id="disp-name")
-        yield Static(classes="time alt", id="disp-exp")
+        #yield Static(classes="time alt", id="disp-exp")
 
     def fill_header_info(self, header_info):
-        self.stop_name = header_info.stop_name
+        dd = "DD"
+        if header_info.stop_place == "Dresden":
+            header_info.stop_place = "DD"
+
         self.stop_place = header_info.stop_place
-        self.stop_expiry = header_info.expiration_text
+        self.stop_name = header_info.stop_name
+
     def clear_header_info(self):
         self.stop_name = "[i][b]stop-name[/b][/i]"
         self.stop_place = "[i]city[/i]"
-        self.stop_expiry = "[i]expiry[/i]"
 
 
     @on(Button.Pressed, "#button-conf-show")

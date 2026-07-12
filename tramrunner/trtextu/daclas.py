@@ -27,11 +27,33 @@ class SIHeaderInfo:
     stop_place: str
     expiration_time: datetime|str
     expiration_text: str = field(init=False)
-    
+
     def __post_init__(self):
         if isinstance(self.expiration_time, str):
             self.expiration_time = utils.vvo_time_conv(self.expiration_time)
             self.expiration_text = utils.diff_to_now(self.expiration_time)
+
+@dataclass
+class CardData:
+    tid: str = "tid"
+    line: str = "line"
+    direction: str = "dir"  # destination name
+    scheduled: datetime = None
+    real_time: datetime | None = None
+    state: str = "state"  # real-time state, e.g. "InTime", "Delayed"
+    platform: any = None
+    mode: str = "none"  # e.g. "Tram", "CityBus", "SuburbanRailway", "Ferry"
+    occupancy: str = "Unknown"  # "Unknown", "ManySeats", "StandingOnly", "Full"
+
+    def __post_init__(self):
+        pass
+
+@dataclass(frozen=True, slots=True)
+class Platform:
+    """A platform or track at a stop."""
+
+    name: str
+    type: str  # "Platform" for bus/tram stops, "Railtrack" for train stations
 
 
 #@dataclass

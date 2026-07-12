@@ -5,10 +5,11 @@ $pad-tb: 1 0 1 0;
 $border-top: tab $accent-darken-2;
 $border-side: thick $accent-darken-2;
 
-$col-tram: #dd0b2f
-$col-bus: #005e79
-$col-sbahn: #009551
-$col-train: #00a15e
+$col-tram: #dd0b2eaa
+$col-cbus: #005e79aa
+$col-pbus: #650d8eaa
+$col-sbahn: #009551aa
+$col-train: #00a15eaa
 
 TramCardBig {
     margin: 0 0 1 0;
@@ -16,7 +17,11 @@ TramCardBig {
     height: auto;
     border-top: $border-top;
     border-left: $border-side;
-
+    &.Tram {Digits {background:$col-tram}}
+    &.CityBus {Digits {background:$col-cbus}}
+    &.PlusBus {Digits {background:$col-pbus}}
+    &.bar {Digits {background:$col-sbahn}}
+    &.foo {Digits {background:$col-train}}
     Grid {
         background: $secondary-background-darken-3;
         grid-size: $gridwidth $gridheight;
@@ -48,6 +53,8 @@ TramCardBig {
             min-width: 11;
             padding: $pad-lr;
             row-span: 3;
+            content-align: center middle;
+            
         }
     }
 }

@@ -32,13 +32,13 @@ Tramrunner.outline {
 
 #header-v3 {
     layout: grid;
-    grid-size: 8;
-    grid-columns: 1fr 2fr 1 2fr 8 9 9 9;
+    grid-size: 6;
+    grid-columns: auto 1 1fr 9 9 9;
     grid-rows: auto 2;
     grid-gutter: 0;
 
     Input {
-        column-span: 5;
+        column-span: 3;
         row-span: 1;
         &.-valid:focus {
             border: tall $success;
@@ -56,11 +56,11 @@ Tramrunner.outline {
     }
     Static {
         background: $primary-background-darken-1;
-        &.err {
-            content-align: left middle;
-            padding: 0 1;
-            background: $primary-background-darken-2;
-        }
+#        &.err {
+#            content-align: left middle;
+#            padding: 0 1;
+#            background: $primary-background-darken-2;
+#        }
         &.place {
             content-align: right middle;
             padding: 0 1;
@@ -74,11 +74,11 @@ Tramrunner.outline {
             content-align: left middle;
             padding: 0 1;
         }
-        &.time {
-            content-align: right middle;
-            padding: 0 1;
-            background: $primary-background-darken-2;
-        }
+#        &.time {
+#            content-align: right middle;
+#            padding: 0 1;
+#            background: $primary-background-darken-2;
+#        }
     }
 }
 
