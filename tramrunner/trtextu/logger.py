@@ -6,11 +6,15 @@ from textual.widgets import Button, Input, Static, Digits, RichLog, Label
 class LoggerPane(Container):
     def compose(self) -> ComposeResult:
         yield Button("Clear", classes="button-clear", id="log1_clear_button")
-        yield Label("logger 1\n#log1_content")
+        yield Button("\nconf", id="button-conf-show", variant="primary")
         yield RichLog(id="log1_content", highlight=True, markup=True)
-
 
     @on(Button.Pressed, "#log1_clear_button")
     def clear_logger1(self):
         logger = self.query_one("#log1_content")
         logger.clear()
+
+    @on(Button.Pressed, "#button-conf-show")
+    def button_conf_show(self):
+        logger = self.app.query_one("#log1_content", RichLog)
+        logger.write(self.app.config)

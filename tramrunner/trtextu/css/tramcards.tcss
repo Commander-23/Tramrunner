@@ -1,4 +1,4 @@
-$gridwidth: 4;
+$gridwidth: 3;
 $gridheight: 3;
 $pad-lr: 0 1 0 1;
 $pad-tb: 1 0 1 0;
@@ -17,16 +17,11 @@ TramCardBig {
     height: auto;
     border-top: $border-top;
     border-left: $border-side;
-    &.Tram {Digits {background:$col-tram}}
-    &.CityBus {Digits {background:$col-cbus}}
-    &.PlusBus {Digits {background:$col-pbus}}
-    &.bar {Digits {background:$col-sbahn}}
-    &.foo {Digits {background:$col-train}}
     Grid {
         background: $secondary-background-darken-3;
         grid-size: $gridwidth $gridheight;
         grid-rows: 1;
-        grid-columns: 1fr 2fr 2fr 2fr;
+        grid-columns: auto auto 2fr 2fr;
         height: auto;
         width: 100%;
 
@@ -35,26 +30,28 @@ TramCardBig {
             width: 100%;
             padding: $pad-lr;
 
-            &.seperator {
-                background: $secondary-background;
-                column-span: $gridwidth;
+            &.time {
+                background: blue;
+                &.none{background: $boost;}
+                &.good{background: #01ff4d35;}
+                &.bad{background: #f200246b;}
+
+                &.scheduled {background: $boost}
             }
 
-            &.mot {}
-            &.direction {
-                background: purple;
-                padding: $pad-lr;
-                width: 1fr;
-            }
-            &.live-time {}
-            &.platform {}
         }
         Digits {
-            min-width: 11;
+            min-width: 12;
             padding: $pad-lr;
+            margin: 0 1 0 0;
             row-span: 3;
             content-align: center middle;
-            
+            &.Tram            {background:$col-tram}
+            &.CityBus         {background:$col-cbus}
+            &.PlusBus         {background:$col-pbus}
+            &.IntercityBus    {background:$col-train}
+            &.SuburbanRailway {background:$col-sbahn}
+            &.Train           {background:$col-train}
         }
     }
 }

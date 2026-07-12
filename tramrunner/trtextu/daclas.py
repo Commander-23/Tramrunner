@@ -1,4 +1,5 @@
 from dataclasses import dataclass, field
+from typing import ClassVar
 from datetime import datetime
 import utils
 import api, utils
@@ -19,7 +20,6 @@ class DepaMonConfig:
     @query_text.setter
     def query_text(self, query_usr_text):
         self.stopid = utils.get_stop_id_from_pointfinder(query_usr_text)
-
 
 @dataclass
 class SIHeaderInfo:
@@ -42,11 +42,8 @@ class CardData:
     real_time: datetime | None = None
     state: str = "state"  # real-time state, e.g. "InTime", "Delayed"
     platform: any = None
-    mode: str = "none"  # e.g. "Tram", "CityBus", "SuburbanRailway", "Ferry"
+    mode: str = "none"
     occupancy: str = "Unknown"  # "Unknown", "ManySeats", "StandingOnly", "Full"
-
-    def __post_init__(self):
-        pass
 
 @dataclass(frozen=True, slots=True)
 class Platform:
@@ -55,21 +52,81 @@ class Platform:
     name: str
     type: str  # "Platform" for bus/tram stops, "Railtrack" for train stations
 
+@dataclass
+class MotInfo:
+    raw_mot: str
+    clean_mot: str = ""
+    icon: str = ""
 
-#@dataclass
-#class StopInfoGather:
-#    Id: str
-##    DlId: str             # no need, can be assembled from LineName & id
-#    LineName: int|str      # usually int sometimes str "8, 10, S8, S1"
-#    Direction: str         # sometimes really long --> truncate
-#    Platform: dict
-#    Mot: str
-#    RealTime: str
-#    ScheduledTime: datetime | None = field(init=False)
-#    State: str = ""
-#    RouteChanges: list
-#    CancelReasons: list
-#    Occupancy: str = ""
+    _lookup: ClassVar = {
+        "Tram": {
+            "clean_mot": "Tram",
+            "icon": "󰿧",
+        },
+        "CityBus": {
+            "clean_mot": "Bus",
+            "icon": "󰃧",
+        },
+        "PlusBus": {
+            "clean_mot": "PlusBus",
+            "icon": "󰃧",
+        },
+        "IntercityBus": {
+            "clean_mot": "ICBus",
+            "icon": "󰃧",
+        },
+        "SuburbanRailway": {
+            "clean_mot": "SBahn",
+            "icon": "",
+        },
+        "Train": {
+            "clean_mot": "Zug",
+            "icon": "󰣄",
+        },
+        "Cableway": {
+            "clean_mot": "blah",
+            "icon": "",
+        },
+        "Ferry": {
+            "clean_mot": "Fähre",
+            "icon": "󰈓",
+        },
+        "HailedSharedTaxi": {
+            "clean_mot": "Taxi",
+            "icon": "󰓿",
+        },
+    }
+
+    def __post_init__(self):
+        if self.raw_mot in self._lookup:
+            values = self._lookup[self.raw_mot]
+            self.clean_mot = values["clean_mot"]
+            self.icon = values["icon"]
+
+@dataclass
+class VehicleState:
+    raw_state: str 
+    clean_state: str = ""
+    delay_status: str = ""
+
+    _lookup: ClassVar = {
+        "InTime": {
+            "clean_state": "Pünktlich",
+            "delay_status": "good",
+        },
+        "Delayed": {
+            "clean_state": "Verspätet",
+            "delay_status": "bad",
+        },
+    }
+    def __post_init__(self):
+            if self.raw_state in self._lookup:
+                values = self._lookup[self.raw_state]
+                self.clean_state = values["clean_state"]
+                self.delay_status = values["delay_status"]
+            else:
+                self.clean_state = "nüscht"
+                self.delay_status = "none"
 
 @dataclass
 class AppConfig:
@@ -89,4 +146,4 @@ class StopInfoConfig:
     time:         str|None = "",
     isarrival:        bool = False,
     shorttermchanges: bool = False,
-    mot: list = ["Tram", "CityBus", "IntercityBus", "SuburbanRailway", "Train"],#, "Cableway", "Ferry", "HailedSharedTaxi"]
+    mot: list = ["Tram", "CityBus", "IntercityBus", "SuburbanRailway", "Train", "Cableway", "Ferry", "HailedSharedTaxi"],

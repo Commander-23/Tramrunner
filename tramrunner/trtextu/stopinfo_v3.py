@@ -24,7 +24,7 @@ class StopInfo(Container):
         }
     stop_info_config = reactive(DepaMonConfig(
         #query_text="rac",
-        limit=10,
+        limit=20,
         time ="",
         isarrival=False,
         shorttermchanges=False,
@@ -47,50 +47,52 @@ class StopInfo(Container):
     @on(Input.Submitted, "#stop-info-text-input")
     def process_search_input(self):
         self.button_clear()
+        self.stop_info_config.query_text = self.query_one("#stop-info-text-input", Input).value
         logger = self.app.query_one("#log1_content", RichLog)
         header = self.query_one("#header-v3", StopInfoHeader_V3)
-        self.stop_info_config.query_text = self.query_one("#stop-info-text-input", Input).value
-        stop_data = api.vvo_departure_monitor(**self.stop_info_config.__dict__)
         content = self.parent.query_one("#SICScroller", VerticalScroll)
-
+        stop_data = api.vvo_departure_monitor(**self.stop_info_config.__dict__)
 
         header_info = SIHeaderInfo(
-            stop_data['Name'],
-            stop_data['Place'],
-            stop_data["ExpirationTime"]
+            stop_data.get("Name",""),
+            stop_data.get("Place",""),
+            stop_data.get("ExpirationTime",None),
         )
         header.fill_header_info(header_info)
 
         for dep in stop_data['Departures']:
-            card_data = CardData()
-            
 
-            scheduled = utils.vvo_time_conv(dep["ScheduledTime"]).astimezone().strftime("%H:%M:%S")
+            direction = dep.get("Direction", "")
+            mode_inf = MotInfo(dep.get("Mot", ""))
+            scheduled = utils.VvoTime.from_string(dep["ScheduledTime"])
+            state = VehicleState(dep.get("State", "none"))
             rt_s = dep.get("RealTime", None)
-            if not rt_s:
-                real_time = "None"
+            if rt_s:
+                real_time = utils.VvoTime.from_string(rt_s)
             else:
-                try:
-                    real_time = utils.vvo_time_conv(rt_s).astimezone().strftime("%H:%M:%S")
-                except ValueError:
-                    real_time = "None"
+                real_time = scheduled
             plf = dep.get("Platform")
             if plf:
                 new_plat = Platform(name=plf.get("Name", ""), type=plf.get("Type", ""))
             else: new_plat = Platform(name="no", type="data")
 
-            card_data.tid = dep.get("Id", "")
-            card_data.line = dep.get("LineName", "")
-            card_data.direction = dep.get("Direction", "")
-            card_data.scheduled = scheduled,
-            card_data.real_time = real_time,
-            card_data.state     = dep.get("State", ""),
-            card_data.platform  = f"{new_plat.type}: {new_plat.name}",
-            card_data.mode      = dep.get("Mot", ""),
-            card_data.occupancy = dep.get("Occupancy", "Unknown"),
-            new_card = TramCardBig(**card_data)
-            new_card.add_class(dep.get("Mot", ""))
+            card_data = CardData()
+
+            card_data.tid       = dep.get("Id", "")
+            card_data.line      = dep.get("LineName", "")
+            card_data.direction = f"{mode_inf.icon} {direction}"
+            card_data.scheduled = scheduled.format_6digits()
+            card_data.real_time = real_time.diff_to_now()
+            card_data.state     = state.clean_state
+            card_data.platform  = f"{new_plat.type}: {new_plat.name}"
+            card_data.mode      = mode_inf.clean_mot
+            card_data.occupancy = dep.get("Occupancy", "Unknown")
+
+            new_card = TramCardBig(card_data)
             content.mount(new_card)
+            new_card.query_one(".state",Label).add_class(state.delay_status)
+            new_card.query_one(".realtime",Label).add_class(state.delay_status)
+            new_card.query_one("Digits",Digits).add_class(mode_inf.raw_mot)
             self.widgets_disp.append(new_card)
 
         #Logging Stuuff
@@ -175,7 +177,6 @@ class StopInfoHeader_V3(Container):
             )
         yield Button("\nrfrsh", id="button-refresh", variant="success")
         yield Button("\nclear", id="button-clear", variant="primary")
-        yield Button("\nconf", id="button-conf-show", variant="primary")
         #yield Static(classes="err alt", id="disp-err")
         yield Static(classes="place", id="disp-place")
         yield Static("󰰂",classes="icon", id="disp-icon")
@@ -183,7 +184,6 @@ class StopInfoHeader_V3(Container):
         #yield Static(classes="time alt", id="disp-exp")
 
     def fill_header_info(self, header_info):
-        dd = "DD"
         if header_info.stop_place == "Dresden":
             header_info.stop_place = "DD"
 
@@ -193,12 +193,6 @@ class StopInfoHeader_V3(Container):
     def clear_header_info(self):
         self.stop_name = "[i][b]stop-name[/b][/i]"
         self.stop_place = "[i]city[/i]"
-
-
-    @on(Button.Pressed, "#button-conf-show")
-    def button_conf_show(self):
-        logger = self.app.query_one("#log1_content", RichLog)
-        logger.write(self.app.config)
 
     def read_config_change(self, settings):
         self.settings = settings

@@ -32,8 +32,8 @@ Tramrunner.outline {
 
 #header-v3 {
     layout: grid;
-    grid-size: 6;
-    grid-columns: auto 1 1fr 9 9 9;
+    grid-size: 5;
+    grid-columns: auto 1 1fr 9 9;
     grid-rows: auto 2;
     grid-gutter: 0;
 
