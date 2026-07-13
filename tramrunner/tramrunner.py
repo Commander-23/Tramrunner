@@ -10,6 +10,11 @@ class Tramrunner(App):
         "trtextu/css/tramcards.tcss",
         "trtextu/css/configurator.tcss"]
     CSS_PATH = CSS_FILES
+    def __init__(self, **kwargs):
+        poif = PointFinderConfig()
+        stopinfoconfer = StopInfoConfig()
+        self.config = AppConfig(poif, stopinfoconfer) # init configuration
+        super().__init__(**kwargs)
     def compose(self) -> ComposeResult:
         yield Header(show_clock=True)
         yield Footer()
@@ -17,14 +22,9 @@ class Tramrunner(App):
             with TabPane("StopInfo", id="stopinfo-wdgt"):
                 yield StopInfo(id="stop-info-container")
             with TabPane("Config", id="config-pane"):
-                yield Configurator(id="config-wdgt")
+                yield Configurator(self.config, id="config-wdgt")
             with TabPane("Log", id="logger"):
                 yield LoggerPane(id="logger-wdgt")
-
-    def on_mount(self):
-        poif = PointFinderConfig()
-        stopinfoconfer = StopInfoConfig()
-        self.config = AppConfig(poif, stopinfoconfer) # init configuration
 
 if __name__ == "__main__":
     app = Tramrunner()

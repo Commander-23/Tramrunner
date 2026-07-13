@@ -1,22 +1,8 @@
-SiConfig {
-    VerticalScroll {
-        border: panel $accent;
-        width: auto;
-        height: auto;
-        max-width: 90%;
-        max-height: 90%;
-
-    }
-}
-
-Configurator > .configCont{
-
-    border: panel $accent;
-    width: auto;
-    height: auto;
-    max-width: 90%;
-    max-height: 90%;
-    Container.wqbuttons {
+$lg: #5eb35685;
+$lr: #d94f3085;
+$border-top: tab $accent-darken-2;
+$border-side: outer $accent;
+Container.wqbuttons {
         border: $panel;
         layout: grid;
         grid-size: 2;
@@ -27,22 +13,62 @@ Configurator > .configCont{
         Static {}
         Button {margin: 0 1;}
     }
-    VerticalScroll.conf-stop-finder {
-        border: $panel;
+
+Container.pointfinder-conf {
+    border-top: $border-top;
+    border-left: $border-side;
+    border-right: $border-side;
+    layout: horizontal;
+    height: 13;
+    margin: 0 0 1 0;
+    padding: 1 0 0 0;
+}
+
+Container.stopinfo-conf {
+    border-top: $border-top;
+    border-left: $border-side;
+    border-right: $border-side;
+    layout: horizontal;
+    height: 13;
+    margin: 0 0 1 0;
+    padding: 1 0 0 0;
+
+}
+
+
+
+SwitchList {
+    height: 1fr;
+    width: auto;
+    padding: 1 1;
+    background: $secondary-background-darken-1;
+    align: center middle;
+    Container.entry {
         layout: grid;
         grid-size: 2;
-        grid-columns: auto;
+        grid-columns:  10;
+        grid-rows: auto;
+        content-align: center middle;
+        height:auto;
+        margin: 0 0;
+        max-width: 100;
+        width: auto;
+    }
+    Switch {
         width: auto;
         height: auto;
-        align: center middle;
-        margin: 1 0;
+    }
+    Static {
     }
 }
 
 TimePicker {
     width: auto;
     height: auto;
-    border: red;
+    margin: 0 1;
+    border: hkey $accent-lighten-1;
+    padding: 0 1;
+    background: $secondary-background-darken-1;
     layout: grid;
     grid-size: 3;
     grid-columns: auto;
@@ -72,5 +98,37 @@ NumberClicker {
     }
     Digits {
         width: 6;
+    }
+}
+
+SelectionList {
+    width: auto;
+    height: auto;
+    padding: 0 2;
+}
+LimitPicker {
+    width: 11;
+    height: 1fr;
+    background: $secondary-background-darken-1;
+    border: hkey $accent-lighten-1;
+    align: center middle;
+    margin: 0 1;
+    padding: 0;
+    Static {
+        height:3;
+        content-align: center middle;
+        margin: 0;
+        padding: 0 1;
+    }
+    Label {
+        max-width: 12;
+        height: 3;
+    }
+    NumberClicker {
+        padding: 1 1;
+    }
+    Button {
+        &.plus {background:$lg;}
+        &.minus {background:$lr;}
     }
 }

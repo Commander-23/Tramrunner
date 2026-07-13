@@ -142,8 +142,8 @@ class PointFinderConfig:
 
 @dataclass
 class StopInfoConfig:
-    limit: int =10,
-    time:         str|None = "",
-    isarrival:        bool = False,
-    shorttermchanges: bool = False,
-    mot: list = ["Tram", "CityBus", "IntercityBus", "SuburbanRailway", "Train", "Cableway", "Ferry", "HailedSharedTaxi"],
+    limit:            int  = 20
+    time:             any  = ""
+    isarrival:        bool = False
+    shorttermchanges: bool = False
+    mot:              list = field(default_factory=lambda: ["Tram", "CityBus", "IntercityBus", "SuburbanRailway", "Train", "Cableway", "Ferry", "HailedSharedTaxi"])

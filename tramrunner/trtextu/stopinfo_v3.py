@@ -22,14 +22,6 @@ class StopInfo(Container):
             "regionalOnly" : False,
             "stopShortcuts": False,
         }
-    stop_info_config = reactive(DepaMonConfig(
-        #query_text="rac",
-        limit=20,
-        time ="",
-        isarrival=False,
-        shorttermchanges=False,
-        mot=["Tram", "CityBus", "IntercityBus", "SuburbanRailway", "Train"],#, "Cableway", "Ferry", "HailedSharedTaxi"]
-        ))
     def compose(self) -> ComposeResult:
         #yield StopInfoHeader_V2(id="header-v2")
         yield StopInfoHeader_V3(id="header-v3")
@@ -47,11 +39,19 @@ class StopInfo(Container):
     @on(Input.Submitted, "#stop-info-text-input")
     def process_search_input(self):
         self.button_clear()
-        self.stop_info_config.query_text = self.query_one("#stop-info-text-input", Input).value
+        stop_info_config = DepaMonConfig(
+            #query_text="rac",
+            limit=self.app.config.stopInfo.limit,
+            time ="",
+            isarrival=False,
+            shorttermchanges=False,
+            mot=["Tram", "CityBus", "IntercityBus", "SuburbanRailway", "Train"],#, "Cableway", "Ferry", "HailedSharedTaxi"]
+            )
+        stop_info_config.query_text = self.query_one("#stop-info-text-input", Input).value
         logger = self.app.query_one("#log1_content", RichLog)
         header = self.query_one("#header-v3", StopInfoHeader_V3)
         content = self.parent.query_one("#SICScroller", VerticalScroll)
-        stop_data = api.vvo_departure_monitor(**self.stop_info_config.__dict__)
+        stop_data = api.vvo_departure_monitor(**stop_info_config.__dict__)
 
         header_info = SIHeaderInfo(
             stop_data.get("Name",""),
@@ -96,44 +96,9 @@ class StopInfo(Container):
             self.widgets_disp.append(new_card)
 
         #Logging Stuuff
-        logger.write(self.stop_info_config)
+        logger.write(stop_info_config)
         logger.write(header_info)
 
-
-    def get_data(self, query_text):
-
-        #self.query_one("#header-v3", StopInfoHeader_V3).fill_header_info(header_info)
-        stop_data = None
-        for dep in stop_data['Departures']:
-            scheduled = utils.vvo_time_conv(dep["ScheduledTime"])
-            rt_s = dep.get("RealTime", None)
-            if not rt_s:
-                real_time = None
-            else:
-                try:
-                    real_time = utils.vvo_time_conv(rt_s)
-                except ValueError:
-                    real_time = None
-            plf = dep.get("Platform")
-            if plf:
-                new_plat = Platform(name=plf.get("Name", ""), type=plf.get("Type", ""))
-            else: Platform(name="", type="")
-            yield TramCardBig(
-                **CardData(
-                    tid=dep.get("Id", ""),
-                    line=dep.get("LineName", ""),
-                    direction=dep.get("Direction", ""),
-                    scheduled=scheduled,
-                    real_time=real_time,
-                    state=dep.get("State", ""),
-                    platform=new_plat,
-                    mode=dep.get("Mot", ""),
-                    occupancy=dep.get("Occupancy", "Unknown"),
-                ).__dict__
-            )
-
-
-        #self.app.query_one("#content-log", RichLog).write(stop_data)
 
     def sort_depas(self, departures)->dict:
         depa_grouped = {}
@@ -152,19 +117,13 @@ class StopInfoContent(Container):
 
 
 class StopInfoHeader_V3(Container):
-    error_msg = reactive("")
     stop_place = reactive("")
     stop_name = reactive("")
-    conf_poif_stops_only = reactive(False)
-    conf_poif_regional_only = reactive(False)
-    conf_poif_stop_shortcuts = reactive(False)
-    settings = reactive([])
     def __init__(self, *children, name = None, id = None, classes = None, disabled = False, markup = True):
         super().__init__(*children, name=name, id=id, classes=classes, disabled=disabled, markup=markup)
         self.stop_name = "[i][b]stop-name[/b][/i]"
         self.stop_place = "[i]city[/i]"
     def render(self):
-        #self.query_one("#disp-err", Static).update(self.error_msg)
         self.query_one("#disp-place", Static).update(self.stop_place)
         self.query_one("#disp-name", Static).update(self.stop_name)
         return super().render()
@@ -186,7 +145,6 @@ class StopInfoHeader_V3(Container):
     def fill_header_info(self, header_info):
         if header_info.stop_place == "Dresden":
             header_info.stop_place = "DD"
-
         self.stop_place = header_info.stop_place
         self.stop_name = header_info.stop_name
 
@@ -200,11 +158,3 @@ class StopInfoHeader_V3(Container):
         self.conf_poif_regional_only = settings['regional-only']
         self.conf_poif_stop_shortcuts = settings['stop-shortcuts']
         self.app.query_one("#log1_content", RichLog).write(settings)
-
-    @on(Input.Changed)
-    def show_invalid_reasons(self, event: Input.Changed) -> None:
-        # Updating the UI to show the reasons why validation failed
-        if not event.validation_result.is_valid:  
-           self.error_msg = str(event.validation_result.failure_descriptions)
-        else:
-            self.error_msg = ""

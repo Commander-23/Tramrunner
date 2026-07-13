@@ -3,8 +3,6 @@ from textual.containers import Container, Grid
 from textual.reactive import reactive
 from .daclas import CardData
 class TramCardBig(Container):
-    #tram color: tomato
-    #bus color: steelblue
     def __init__(self, card_dat: CardData, **kwargs):
         self.tid = card_dat.tid
         self.line = card_dat.line
@@ -15,13 +13,11 @@ class TramCardBig(Container):
         self.platform = card_dat.platform
         self.mode = card_dat.mode
         self.occupancy = card_dat.occupancy
-        #self.val_plf = f"{values.get('Platform').get('Type')} {values['Platform']['Name']}"
         super().__init__(**kwargs)
 
     def compose(self):
         self.border_title=self.direction
         with Grid():
-            #yield Label(self.val_sep, classes="seperator")
             yield Digits(self.line)
 
             yield Label(self.state, classes="time state")

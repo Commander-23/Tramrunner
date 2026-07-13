@@ -91,7 +91,6 @@ Tramrunner.screen-size {
             grid-size: 1;
         }
     }
-    
     &.wide SiConfig{
         Container.wqbuttons {
             grid-size: 2;
@@ -99,32 +98,6 @@ Tramrunner.screen-size {
         Container.conf-stop-finder {
             grid-size: 3;
         }
-    }
-    
-}
- 
-SwitchList {
-    height: auto;
-    max-height: 15;
-    width: auto;
-    border: red;
-    padding: 1 1;
-    Container.entry {
-        layout: grid;
-        grid-size: 2 2;
-        grid-columns:  10;
-        grid-rows: auto;
-        content-align: center middle;
-        height:auto;
-        margin: 0 0;
-        max-width: 100;
-        width: auto;
-    }
-    Switch {
-        width: auto;
-        height: auto;
-    }
-    Static {
     }
 }
 
