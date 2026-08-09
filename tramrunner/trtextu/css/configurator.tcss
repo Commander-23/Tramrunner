@@ -38,9 +38,10 @@ Container.stopinfo-conf {
 
 
 SwitchList {
+    border: hkey $accent-lighten-1;
     height: 1fr;
     width: auto;
-    padding: 1 1;
+    padding: 0 1;
     background: $secondary-background-darken-1;
     align: center middle;
     Container.entry {
@@ -102,9 +103,12 @@ NumberClicker {
 }
 
 SelectionList {
+    border: hkey $accent-lighten-1;
     width: auto;
     height: auto;
-    padding: 0 2;
+    padding: 1 3;
+    margin: 0 1;
+    background: $secondary-background-darken-1;
 }
 LimitPicker {
     width: 11;

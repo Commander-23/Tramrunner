@@ -18,11 +18,11 @@ class Configurator(Container):
         yield PointFinderConfWdgt(config=self.edit_config, id="pointfinderconf", classes="pointfinder-conf")
         yield StopInfoConfWdgt(config=self.edit_config, id="stopinfoconf", classes="stopinfo-conf",)
 
-    def load_config(self):
-        self.edit_config = deepcopy(self.app.config)
-
     @on(Button.Pressed, "#button-conf-save")
     def button_conf_save(self, event):
+        self.edit_config.pointFinder.stopsOnly = self.query_one("#stops-only", Switch).value
+        self.edit_config.pointFinder.regionalOnly = self.query_one("#regional-only", Switch).value
+        self.edit_config.pointFinder.stopShortcuts = self.query_one("#stop-shortcuts", Switch).value
         self.app.config = deepcopy(self.edit_config)
         logger = self.app.query_one("#log1_content", RichLog)
         logger.write(self.edit_config)
@@ -32,8 +32,6 @@ class Configurator(Container):
         self.edit_config = deepcopy(self.app.config)
 
 
-
-# Config Components
 class PointFinderConfWdgt(Container):
     def __init__(self, config: AppConfig, **kwargs):
             self.config = config
@@ -43,17 +41,16 @@ class PointFinderConfWdgt(Container):
         yield LimitPicker(
             setup={"title": "Limit", "text": "poi Results"},
             value = self.config.pointFinder.limit,
-            id="limit1")
+            id="limit1").data_bind(limit=self.config.pointFinder.limit)
         yield SwitchList([
-                {"id":"stops-only"    ,"value":True  ,"label":"stops-only"},
-                {"id":"regional-only" ,"value":False ,"label":"regional-only"},
-                {"id":"stop-shortcuts","value":False ,"label":"stop-shortcuts"},
+                {"id":"stops-only"    ,"value":self.config.pointFinder.stopsOnly  ,"label":"stops-only"},
+                {"id":"regional-only" ,"value":self.config.pointFinder.regionalOnly ,"label":"regional-only"},
+                {"id":"stop-shortcuts","value":self.config.pointFinder.stopShortcuts ,"label":"stop-shortcuts"},
             ])
     def on_mount(self):
         picker = self.query_one("#limit1",LimitPicker)
         self.watch(picker, "limit", self._limit_changed)
     def _limit_changed(self, old_value, new_value):
-        self.app.query_one("#log1_content", RichLog).write("chenge claees")
         self.config.pointFinder.limit = new_value
 
 class StopInfoConfWdgt(Container):
@@ -146,7 +143,7 @@ class TimePicker(Container):
         return time(hour=self.hours, minute=self.minutes, second=self.seconds)
 
 class LimitPicker(Container):
-    limit = reactive(0, init=True)
+    limit = reactive(0)
     def __init__(self, setup, value=0, **kwargs):
         super().__init__(**kwargs)
         self.setup = setup
@@ -154,8 +151,8 @@ class LimitPicker(Container):
         self.inival = value
     def compose(self) -> ComposeResult:
         self.border_title=self.setup["title"]
-        self.clicker = NumberClicker({"small-buttons": True, "min": 0, "max": 99}, self.limit)
-        self.clicker.number = self.inival
+        self.clicker = NumberClicker({"small-buttons": True, "min": 0, "max": 99}, self.limit)#.data_bind(number = self.Limit)
+        #self.clicker.number = self.inival
         yield Static(self.setup["text"])
         yield self.clicker
     def on_mount(self):
@@ -163,5 +160,4 @@ class LimitPicker(Container):
         self.clicker.number = self.limit
 
     def number_changed(self, old, value):
-        print(self.id, old, value)
         self.limit = value
