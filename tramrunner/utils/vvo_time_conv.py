@@ -66,7 +66,14 @@ class VvoTime:
             timestamp=None
         )
     def format_6digits(self):
+        """HH:MM:SS"""
         return self.timestamp.astimezone().strftime("%H:%M:%S")
+    def format_4digits(self):
+        """H:M"""
+        return self.timestamp.astimezone().strftime("%H:%M")
+    def format_date(self):
+        """dd.mm yy"""
+        return self.timestamp.astimezone().strftime("%d.%m %y")
 
     def diff_to_now(self):
         delta = self.timestamp - datetime.now(pytz.utc)
