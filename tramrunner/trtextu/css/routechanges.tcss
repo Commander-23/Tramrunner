@@ -1,0 +1,17 @@
+RouteChanges {
+    padding: 1;
+    border: block $panel;
+    Button {
+        margin: 0 1 1 0;
+    }
+    Label.rclabel {
+        background: $primary-background;
+        padding: 0 1;
+        margin: 0 0 0 0;
+    }
+    Label.rcvar {
+        background: $secondary-background;
+        padding: 0 1;
+        margin: 0 2 0 0;
+    }
+}

@@ -1,7 +1,8 @@
+$columns: 3;
 LoggerPane {
     layout: grid;
-    grid-size: 2;
-    grid-columns: auto 1fr;
+    grid-size: $columns;
+    grid-columns: 1fr;
     grid-rows: 3 1fr;
     padding: 0 1 1 1;
 
@@ -15,6 +16,6 @@ LoggerPane {
         height: 100%;
     }
     RichLog {
-        column-span: 2;
+        column-span: $columns;
     }
 }

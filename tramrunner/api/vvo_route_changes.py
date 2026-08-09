@@ -1,5 +1,5 @@
 from api import query_vvo_api
-def vvo_route_changes(shortterm: bool = True):
+def vvo_route_changes(shortterm: bool = True, provider: str = None, format: str = "json"):
     """
     Get information about route changes because of construction work or such.
     Arguments:
@@ -7,6 +7,9 @@ def vvo_route_changes(shortterm: bool = True):
     """
     defaulturl = "https://webapi.vvo-online.de/rc"
 
-    query_params = {"shortterm": shortterm}
+    query_params = {"shortterm": shortterm,
+                    "provider": provider,
+                    "format": format,
+                    }
 
     return query_vvo_api(defaulturl, None, query_params)

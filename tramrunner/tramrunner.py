@@ -8,7 +8,8 @@ class Tramrunner(App):
         "trtextu/css/header_v3.tcss",
         "trtextu/css/loggerPane.tcss",
         "trtextu/css/tramcards.tcss",
-        "trtextu/css/configurator.tcss"]
+        "trtextu/css/configurator.tcss",
+        "trtextu/css/routechanges.tcss"]
     CSS_PATH = CSS_FILES
     def __init__(self, **kwargs):
         poif = PointFinderConfig()
@@ -23,6 +24,8 @@ class Tramrunner(App):
                 yield StopInfo(id="stop-info-container")
             with TabPane("Config", id="config-pane"):
                 yield Configurator(self.config, id="config-wdgt")
+            with TabPane("RouteChanges", id="route-changes-pane"):
+                yield RouteChanges(id="logger-wdgt")
             with TabPane("Log", id="logger"):
                 yield LoggerPane(id="logger-wdgt")
 
