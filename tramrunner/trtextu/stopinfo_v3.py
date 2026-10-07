@@ -8,20 +8,13 @@ from textual.widgets import Label, Placeholder, Collapsible, SelectionList, Pret
 
 from .daclas import *
 import utils, api
-from datetime import datetime, time
-import pytz
 from .tramcards_test import TramCardBig
+from .config_menu import TimePicker
 
 class StopInfo(Container):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.widgets_disp = []
-        self.new_conf = {
-            "poifi_limit"  : 0,
-            "stopsOnly"    : False,
-            "regionalOnly" : False,
-            "stopShortcuts": False,
-        }
     def compose(self) -> ComposeResult:
         #yield StopInfoHeader_V2(id="header-v2")
         yield StopInfoHeader_V3(id="header-v3")
@@ -39,13 +32,17 @@ class StopInfo(Container):
     @on(Input.Submitted, "#stop-info-text-input")
     def process_search_input(self):
         self.button_clear()
+        si = self.app.config.stopInfo
+        if si.useNow:
+            # keep the config pane's picker in step with the time we query
+            picker = self.app.query_one("#timepicker", TimePicker)
+            picker.set_now()
         stop_info_config = DepaMonConfig(
-            #query_text="rac",
-            limit=self.app.config.stopInfo.limit,
-            time ="",
-            isarrival=False,
-            shorttermchanges=False,
-            mot=["Tram", "CityBus", "IntercityBus", "SuburbanRailway", "Train"],#, "Cableway", "Ferry", "HailedSharedTaxi"]
+            limit=si.limit,
+            time=utils.vvo_query_time(si.time, si.useNow),
+            isarrival=si.isarrival,
+            shorttermchanges=si.shorttermchanges,
+            mot=list(si.mot),
             )
         stop_info_config.query_text = self.query_one("#stop-info-text-input", Input).value
         logger = self.app.query_one("#log1_content", RichLog)
@@ -151,10 +148,3 @@ class StopInfoHeader_V3(Container):
     def clear_header_info(self):
         self.stop_name = "[i][b]stop-name[/b][/i]"
         self.stop_place = "[i]city[/i]"
-
-    def read_config_change(self, settings):
-        self.settings = settings
-        self.conf_poif_stops_only = settings['stops-only']
-        self.conf_poif_regional_only = settings['regional-only']
-        self.conf_poif_stop_shortcuts = settings['stop-shortcuts']
-        self.app.query_one("#log1_content", RichLog).write(settings)
