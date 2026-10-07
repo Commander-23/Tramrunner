@@ -12,10 +12,8 @@ class Tramrunner(App):
         "trtextu/css/routechanges.tcss"]
     CSS_PATH = CSS_FILES
     def __init__(self, **kwargs):
-        poif = PointFinderConfig()
-        stopinfoconfer = StopInfoConfig()
-        self.config = AppConfig(poif, stopinfoconfer) # init configuration
         super().__init__(**kwargs)
+        self.config = AppConfig()
     def compose(self) -> ComposeResult:
         yield Header(show_clock=True)
         yield Footer()

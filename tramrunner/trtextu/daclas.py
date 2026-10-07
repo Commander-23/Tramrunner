@@ -1,4 +1,4 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, fields, is_dataclass, asdict
 from typing import ClassVar
 from datetime import datetime
 import utils
@@ -127,23 +127,3 @@ class VehicleState:
             else:
                 self.clean_state = "nüscht"
                 self.delay_status = "none"
-
-@dataclass
-class AppConfig:
-    pointFinder: PointFinderConfig
-    stopInfo: StopInfoConfig
-
-@dataclass
-class PointFinderConfig:
-    limit:         int  = 5
-    stopsOnly:     bool = True
-    regionalOnly:  bool = True
-    stopShortcuts: bool = False
-
-@dataclass
-class StopInfoConfig:
-    limit:            int  = 20
-    time:             any  = ""
-    isarrival:        bool = False
-    shorttermchanges: bool = False
-    mot:              list = field(default_factory=lambda: ["Tram", "CityBus", "IntercityBus", "SuburbanRailway", "Train", "Cableway", "Ferry", "HailedSharedTaxi"])
