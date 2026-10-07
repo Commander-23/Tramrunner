@@ -1,7 +1,26 @@
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta, timezone, time
 from dataclasses import dataclass
 import pytz
 import re
+
+VVO_TZ = pytz.timezone("Europe/Berlin")
+
+def vvo_now() -> datetime:
+    """Current time in Dresden, without microseconds."""
+    return datetime.now(VVO_TZ).replace(microsecond=0)
+
+def vvo_query_time(fixed: str = "", use_now: bool = True) -> str:
+    """
+    ISO 8601 timestamp for the `time` parameter of VVO API requests.
+    (Requests take ISO 8601; responses use the /Date(ms+tz)/ format -> see VvoTime.)
+
+    use_now: use the current time
+    fixed:   "HH:MM:SS" for today, used when use_now is False
+    """
+    if use_now or not fixed:
+        return vvo_now().isoformat()
+    today = vvo_now().date()
+    return VVO_TZ.localize(datetime.combine(today, time.fromisoformat(fixed))).isoformat()
 def vvo_time_conv(dvb_time_noformat: str) -> datetime:
     """
         sign = 1 if tz_str[0] == "+" else -1
